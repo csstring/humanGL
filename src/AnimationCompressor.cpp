@@ -16,7 +16,7 @@ std::pair<float, int32> AnimationCompressor::findFramePoint(std::vector<uint32> 
 
     for (float i = k2 + 1; i < k3; ++i)
     {
-        glm::quat point = glm::catmullRom((it + k1)->second,(it + k2)->second,(it + k3)->second,(it + k4)->second, (i-k2) / (k3 - k2));
+        glm::quat point = math::catmullRom((it + k1)->second,(it + k2)->second,(it + k3)->second,(it + k4)->second, (i-k2) / (k3 - k2));
         float x = (it + i)->second.x - point.x;
         float y = (it + i)->second.y - point.y;
         float z = (it + i)->second.z - point.z;

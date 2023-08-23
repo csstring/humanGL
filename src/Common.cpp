@@ -22,30 +22,30 @@ std::vector<std::string> ft_split(const std::string& str)
 
 glm::mat4 ft_rotate(glm::vec3 start, glm::vec3 end)
 { 
-    start = glm::normalize(start);
-    end = glm::normalize(end);
-    glm::vec3 axis = glm::cross(start, end);
-    glm::vec3 axisNormal = glm::normalize(axis);
-    float angle = glm::acos(glm::dot(start, end));
-    return glm::rotate(angle, axisNormal);
+    start = math::normalize(start);
+    end = math::normalize(end);
+    glm::vec3 axis = math::cross(start, end);
+    glm::vec3 axisNormal = math::normalize(axis);
+    float angle = acos(math::dot(start, end));
+    return math::rotate(angle, axisNormal);
 }
 
 glm::vec3 quatToEulerDivideRatio(const glm::quat& quat, float ratio)
 {
-    glm::vec3 axis = glm::axis(quat);
-    float angle = glm::angle(quat);
+    glm::vec3 axis = math::axis(quat);
+    float angle = math::angle(quat);
     angle *= ratio;
-    glm::quat newQuat = glm::angleAxis(angle, axis);
+    glm::quat newQuat = math::angleAxis(angle, axis);
 
-    return glm::eulerAngles(newQuat);
+    return math::eulerAngles(newQuat);
 }
 
 glm::quat quatDivideRatio(const glm::quat& quat, float ratio)
 {
-    glm::vec3 axis = glm::axis(quat);
-    float angle = glm::angle(quat);
+    glm::vec3 axis = math::axis(quat);
+    float angle = math::angle(quat);
     angle *= ratio;
-    return glm::angleAxis(angle, axis);
+    return math::angleAxis(angle, axis);
 }
 
 std::string ft_to_string(const physx::PxVec3& vec)

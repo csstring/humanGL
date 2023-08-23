@@ -23,13 +23,13 @@ void Camera::updateCameraVectors()
 {
     // calculate the new Front vector
     glm::vec3 front;
-    front.x = cos(glm::radians(_yaw)) * cos(glm::radians(_pitch));
-    front.y = sin(glm::radians(_pitch));
-    front.z = sin(glm::radians(_yaw)) * cos(glm::radians(_pitch));
-    _cameraFront = glm::normalize(front);
+    front.x = cos(math::radians(_yaw)) * cos(math::radians(_pitch));
+    front.y = sin(math::radians(_pitch));
+    front.z = sin(math::radians(_yaw)) * cos(math::radians(_pitch));
+    _cameraFront = math::normalize(front);
     // also re-calculate the Right and Up vector
-    _cameraRight = glm::normalize(glm::cross(_cameraFront, _cameraUp));  // normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
-    _cameraUp    = glm::normalize(glm::cross(_cameraRight, _cameraFront));
+    _cameraRight = math::normalize(math::cross(_cameraFront, _cameraUp));  // normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
+    _cameraUp    = math::normalize(math::cross(_cameraRight, _cameraFront));
 }
 
 void Camera::ProcessMouseMovement(float xoffset, float yoffset, bool constrainPitch = true)

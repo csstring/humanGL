@@ -33,7 +33,6 @@ void Scene::initialize(physx::PxPhysics* gPhysics, physx::PxScene* gScene)
             pos1.z = 0;
         else
             pos1.z = 0;
-        glm::vec3 randomColor = glm::linearRand(glm::vec3(0.0f), glm::vec3(1.0f));
         _objects.push_back(CollisionCube(dimension1, pos1));
     }
     for (int i=0; i <10; ++i)
@@ -44,7 +43,6 @@ void Scene::initialize(physx::PxPhysics* gPhysics, physx::PxScene* gScene)
             pos2.z = 0;
         else
             pos2.z = 0;
-        glm::vec3 randomColor = glm::linearRand(glm::vec3(0.0f), glm::vec3(1.0f));
         _objects.push_back(CollisionCube(dimension2, pos2));
     }
     // glm::quat rot = glm::angleAxis(glm::radians(12.0f), glm::vec3(0.0f, 0.0f, 1.0f));

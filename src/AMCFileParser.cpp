@@ -112,11 +112,11 @@ bool AMCFileParser::loadAMCFile(void)
             ifs >> val;
 
             if (dof == DOF::RX)
-                matrix = glm::rotate(glm::radians(val), glm::vec3(1.0f,0.0f,0.0f)) * matrix;   
+                matrix = math::rotate(math::radians(val), glm::vec3(1.0f,0.0f,0.0f)) * matrix;   
             else if (dof == DOF::RY)
-                matrix = glm::rotate(glm::radians(val), glm::vec3(0.0f,1.0f,0.0f)) * matrix; 
+                matrix = math::rotate(math::radians(val), glm::vec3(0.0f,1.0f,0.0f)) * matrix; 
             else if (dof == DOF::RZ)
-                matrix = glm::rotate(glm::radians(val), glm::vec3(0.0f,0.0f,1.0f)) * matrix; 
+                matrix = math::rotate(math::radians(val), glm::vec3(0.0f,0.0f,1.0f)) * matrix; 
             else if (dof == DOF::TX)
                 localTransV.x += val;
             else if (dof == DOF::TY)
@@ -136,25 +136,25 @@ bool AMCFileParser::loadAMCFile(void)
             total += localTransV;
             firstTrans = tmp;
             if (_animation->_name == "idle")
-                matrix = glm::rotate(glm::radians(90.0f), glm::vec3(0.0f,1.0f,0.0f)) * matrix;
+                matrix = math::rotate(math::radians(90.0f), glm::vec3(0.0f,1.0f,0.0f)) * matrix;
             else if (_animation->_name == "runJump2" || _animation -> _name == "roll")
             {
-                matrix = glm::rotate(glm::radians(180.0f), glm::vec3(0.0f,1.0f,0.0f)) * matrix;
-                localTransV = glm::rotate(glm::radians(180.0f), glm::vec3(0.0f,1.0f,0.0f)) * glm::vec4(localTransV,1);
+                matrix = math::rotate(math::radians(180.0f), glm::vec3(0.0f,1.0f,0.0f)) * matrix;
+                localTransV = math::rotate(math::radians(180.0f), glm::vec3(0.0f,1.0f,0.0f)) * glm::vec4(localTransV,1);
             }
             else if (_animation->_name == "punch")
             {
-                matrix = glm::rotate(glm::radians(90.0f), glm::vec3(0.0f,1.0f,0.0f)) * matrix;
+                matrix = math::rotate(math::radians(90.0f), glm::vec3(0.0f,1.0f,0.0f)) * matrix;
             }
             else if (_animation->_name == "golf")
             {
-                matrix = glm::rotate(glm::radians(-90.0f), glm::vec3(0.0f,1.0f,0.0f)) * matrix;
+                matrix = math::rotate(math::radians(-90.0f), glm::vec3(0.0f,1.0f,0.0f)) * matrix;
             }
         }
-        glm::quat localRot = bone._c * glm::quat_cast(matrix) * bone._invC;
+        glm::quat localRot = bone._c * math::quatCast(matrix) * bone._invC;
         animationData->_localRotation.push_back({animationTime, localRot});
 
-        glm::vec3 transV = glm::toMat3(localRot) * bone._b + localTransV;
+        glm::vec3 transV = math::toMat3(localRot) * bone._b + localTransV;
         animationData->_localTrans.push_back({animationTime, transV});
 
         moveBoneIndex++;

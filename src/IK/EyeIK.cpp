@@ -11,7 +11,7 @@
 
 glm::vec3 EyeIK::moveInBoneLocalPos(const glm::vec3& start, const glm::vec3& end, const glm::quat& toTargetDir, const glm::vec3& endBoneDir, float ratio)//비율
 {
-    float distance = glm::length(end - start);
+    float distance = math::length(end - start);
     glm::vec3 initialPos = start + endBoneDir * distance;
     glm::vec3 targetPos = start + quatDivideRatio(toTargetDir, ratio) * endBoneDir * distance;
     
@@ -65,11 +65,11 @@ void EyeIK::solveIK(
     }
 
     glm::mat4 charLocalToWorld = worldTranslate * worldRotation;
-    glm::vec3 targetPosInCharLocal = glm::inverse(charLocalToWorld) * glm::vec4(_targetPosition, 1);
-    glm::vec3 middleEye = glm::mix(*(inCharLocalPos.end()-2), *(inCharLocalPos.end()-1),0.8);
+    glm::vec3 targetPosInCharLocal = math::inverse(charLocalToWorld) * glm::vec4(_targetPosition, 1);
+    glm::vec3 middleEye = math::mix(*(inCharLocalPos.end()-2), *(inCharLocalPos.end()-1),0.8);
     glm::vec3 targetDir = targetPosInCharLocal - middleEye;
-    glm::vec3 curSee = inCharLocalRot.back() * glm::vec4(glm::cross(glm::vec3(1,0,0), _bonedirection.back()),1);
-    glm::quat afterSee = glm::rotation(glm::normalize(curSee), glm::normalize(targetDir));
+    glm::vec3 curSee = inCharLocalRot.back() * glm::vec4(math::cross(glm::vec3(1,0,0), _bonedirection.back()),1);
+    glm::quat afterSee = math::rotation(math::normalize(curSee), math::normalize(targetDir));
 
     for (uint32 i : _boneIndexVec)
     {
@@ -107,7 +107,7 @@ void EyeIK::solveIK(
             continue;
         glm::quat mixRot = quatDivideRatio(afterSee,ratio) * _boneLocalVector[_boneIndexVec[i]].rotationInBoneLocal;
         glm::vec3 mixTranslate = _boneLocalVector[_boneIndexVec[i]].translationInBoneLocal + moveInBoneLocalPos(inCharLocalPos[i-1], inCharLocalPos[i], afterSee, _bonedirection[i], ratio);
-        _boneLocalVector[_boneIndexVec[i]].rotationInBoneLocal = glm::slerp(_boneLocalVector[_boneIndexVec[i]].rotationInBoneLocal, mixRot, _blendingRatio);
-        _boneLocalVector[_boneIndexVec[i]].translationInBoneLocal = glm::mix(_boneLocalVector[_boneIndexVec[i]].translationInBoneLocal, mixTranslate, _blendingRatio);
+        _boneLocalVector[_boneIndexVec[i]].rotationInBoneLocal = math::slerp(_boneLocalVector[_boneIndexVec[i]].rotationInBoneLocal, mixRot, _blendingRatio);
+        _boneLocalVector[_boneIndexVec[i]].translationInBoneLocal = math::mix(_boneLocalVector[_boneIndexVec[i]].translationInBoneLocal, mixTranslate, _blendingRatio);
     }
 }

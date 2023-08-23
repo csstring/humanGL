@@ -8,6 +8,8 @@
 #include "GLM/gtx/string_cast.hpp"
 #include "PxPhysicsAPI.h"
 #include <ostream>
+#include "math/Math.h"
+
 typedef signed char         int8;
 typedef signed short        int16;
 typedef signed int          int32;
@@ -17,7 +19,6 @@ typedef unsigned short      uint16;
 typedef unsigned int        uint32;
 typedef unsigned long       uint64;        
 
-const float PI = 3.141592;
 const float OVERLAPTIME = 200;
 
 class Noncopyable

@@ -23,7 +23,7 @@ void IBlendNode::getTransFormByKeyFrame(glm::quat& interpolR, glm::vec3& interpo
     const glm::quat& t1 = (itR - 2)->second;
     const glm::quat& t2 = (itR - 1)->second;
     const glm::quat& t3 = (itR - 0)->second;
-    interpolR = glm::catmullRom(t0,t1,t2,t3, (keyFrame - (itR -2)->first)/((itR-1)->first - (itR -2)->first));
+    interpolR = math::catmullRom(t0,t1,t2,t3, (keyFrame - (itR -2)->first)/((itR-1)->first - (itR -2)->first));
 
     auto itT = std::lower_bound(node->_localTrans.begin(), node->_localTrans.end(), keyFrame, pairCompare);
     itT++;
@@ -31,7 +31,7 @@ void IBlendNode::getTransFormByKeyFrame(glm::quat& interpolR, glm::vec3& interpo
     const glm::vec3& v1 = (itT - 2)->second;
     const glm::vec3& v2 = (itT - 1)->second;
     const glm::vec3& v3 = (itT - 0)->second;
-    interpolT = glm::catmullRom(v0,v1,v2,v3,(keyFrame - (itT -2)->first)/((itT-1)->first - (itT -2)->first));
+    interpolT = math::catmullRom(v0,v1,v2,v3,(keyFrame - (itT -2)->first)/((itT-1)->first - (itT -2)->first));
 }
 
 void IBlendNode::updateTransForm(
@@ -66,9 +66,9 @@ void IBlendNode::updateTransForm(
         getTransFormByKeyFrame(mixR, mixT, curData, keyFrame);
         
         // if (nodeNum != BlendNode::UPPER || curData->_boneIndex != BONEID::ROOT)
-            _boneLocalVector[curData->_boneIndex].translationInBoneLocal = glm::mix(_boneLocalVector[curData->_boneIndex].translationInBoneLocal, mixT, interpolVal);
+            _boneLocalVector[curData->_boneIndex].translationInBoneLocal = math::mix(_boneLocalVector[curData->_boneIndex].translationInBoneLocal, mixT, interpolVal);
         // if (nodeNum != BlendNode::LOWER || curData->_boneIndex != BONEID::ROOT)
-            _boneLocalVector[curData->_boneIndex].rotationInBoneLocal = glm::slerp(_boneLocalVector[curData->_boneIndex].rotationInBoneLocal, mixR, interpolVal);
+            _boneLocalVector[curData->_boneIndex].rotationInBoneLocal = math::slerp(_boneLocalVector[curData->_boneIndex].rotationInBoneLocal, mixR, interpolVal);
     }
 }
 

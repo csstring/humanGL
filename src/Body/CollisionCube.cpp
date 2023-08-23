@@ -30,7 +30,7 @@ void CollisionCube::update(glm::quat quat)
     // gCubeActor->setGlobalPose(pos);
 
     _cube._rot = quat * _cube._rot;
-    _cube._translate = glm::translate(glm::mat4(1.0f), _position);
+    _cube._translate = math::translate(glm::mat4(1.0f), _position);
     _cube.update();
 }
 

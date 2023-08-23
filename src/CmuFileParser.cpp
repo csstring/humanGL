@@ -210,8 +210,8 @@ bool CmuFileParser::parserAsfDof(std::ifstream& ifs, Bone& bone)
         std::getline(ifs, buffer, '(');
         float min, max;
         ifs >> min, ifs >> max;
-        min = glm::radians(min);
-        max = glm::radians(max);
+        min = math::radians(min);
+        max = math::radians(max);
         bone._limits.push_back({dof, min, max});
         std::getline(ifs, buffer);
     }
@@ -248,13 +248,13 @@ bool CmuFileParser::parseAsfHierarchy(std::ifstream& ifs)
             bone._parentBoneIndex = -1;
             glm::vec3 axis = bone._axis;
             
-            glm::mat4 rotX = glm::rotate(axis[0], glm::vec3(1.0f,0.0f,0.0f));
-            glm::mat4 rotY = glm::rotate(axis[1], glm::vec3(0.0f,1.0f,0.0f));
-            glm::mat4 rotZ = glm::rotate(axis[2], glm::vec3(0.0f,0.0f,1.0f));
+            glm::mat4 rotX = math::rotate(axis[0], glm::vec3(1.0f,0.0f,0.0f));
+            glm::mat4 rotY = math::rotate(axis[1], glm::vec3(0.0f,1.0f,0.0f));
+            glm::mat4 rotZ = math::rotate(axis[2], glm::vec3(0.0f,0.0f,1.0f));
 
             glm::mat4 c = rotZ * rotY * rotX * glm::mat4(1.0f);
-            bone._c = glm::quat_cast(c);
-            bone._invC = glm::quat_cast(glm::inverse(c));
+            bone._c = math::quatCast(c);
+            bone._invC = math::quatCast(math::inverse(c));
             bone._b = glm::vec3(bone._postion.x, bone._postion.y, bone._postion.z);
         }
 
@@ -268,13 +268,13 @@ bool CmuFileParser::parseAsfHierarchy(std::ifstream& ifs)
             bone._parentBoneIndex = boneIndex;
             glm::vec3 axis = bone._axis;
 //mat4 fixme
-            glm::mat4 rotX = glm::rotate(axis[0], glm::vec3(1.0f,0.0f,0.0f));
-            glm::mat4 rotY = glm::rotate(axis[1], glm::vec3(0.0f,1.0f,0.0f));
-            glm::mat4 rotZ = glm::rotate(axis[2], glm::vec3(0.0f,0.0f,1.0f));
+            glm::mat4 rotX = math::rotate(axis[0], glm::vec3(1.0f,0.0f,0.0f));
+            glm::mat4 rotY = math::rotate(axis[1], glm::vec3(0.0f,1.0f,0.0f));
+            glm::mat4 rotZ = math::rotate(axis[2], glm::vec3(0.0f,0.0f,1.0f));
 
             glm::mat3 c = rotZ * rotY * rotX;
-            bone._c = glm::quat_cast(c);
-            bone._invC = glm::quat_cast(glm::inverse(c));
+            bone._c = math::quatCast(c);
+            bone._invC = math::quatCast(math::inverse(c));
 
             glm::vec3 dir = _skeleton->getGBL() * bone._length * bone._direction;
             bone._b = glm::vec3(dir);

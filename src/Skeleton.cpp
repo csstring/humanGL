@@ -21,11 +21,11 @@ glm::vec3 Skeleton::getCharLocalPosition(BONEID boneID)
     const Bone* bone = &_boneVector[boneID];
     while (true)
     {   
-        glm::quat localRot = bone->_c * glm::quat_cast(matrix) * bone->_invC;
-        glm::vec3 transV = glm::toMat3(localRot) * bone->_b;
-        glm::mat4 trans = glm::translate(glm::mat4(1.0f), transV);
+        glm::quat localRot = bone->_c * math::quatCast(matrix) * bone->_invC;
+        glm::vec3 transV = math::toMat3(localRot) * bone->_b;
+        glm::mat4 trans = math::translate(glm::mat4(1.0f), transV);
 
-        matrix = trans * glm::toMat4(localRot) * matrix;
+        matrix = trans * math::toMat4(localRot) * matrix;
         if (bone->_parentBoneIndex == -1)
             break;
         bone = &_boneVector[bone->_parentBoneIndex];
@@ -46,5 +46,5 @@ float Skeleton::getSkeletonWidth(void)
     glm::vec3 rightHandPos = getCharLocalPosition(BONEID::RCLAVICLE);
     glm::vec3 leftHandPos = getCharLocalPosition(BONEID::LCLAVICLE);
 
-    return glm::length(rightHandPos - leftHandPos);
+    return math::length(rightHandPos - leftHandPos);
 }

@@ -10,15 +10,15 @@ void Cylinder::initialize(glm::vec3 color, uint32 VBC, BONEID ID)
     std::vector<glm::vec3> cylinderPos;
     if (ID == BONEID::HEAD)
     {
-        _transForm = glm::rotate(_transForm, glm::radians(45.0f), glm::vec3(0,0,1));
+        _transForm = math::rotate(_transForm, math::radians(45.0f), glm::vec3(0,0,1));
     }
     cylinderPos.reserve(_numSlices);
     for (uint32 i = 0; i <= _numSlices; ++i)
     {
         glm::vec3 pos;
 
-        pos.x = glm::cos(curAngle) * _radius;
-        pos.y = glm::sin(curAngle) * _radius;
+        pos.x = cos(curAngle) * _radius;
+        pos.y = sin(curAngle) * _radius;
         cylinderPos.push_back(pos);
         curAngle += angleStep;
     }

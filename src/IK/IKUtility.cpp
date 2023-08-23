@@ -4,7 +4,7 @@
 
 bool limitAngleCheck(const Bone& bone, const glm::quat& boneRot)
 {
-    glm::vec3 eulerAngle = glm::eulerAngles(boneRot);
+    glm::vec3 eulerAngle = math::eulerAngles(boneRot);
 
     for (auto& limit : bone._limits)
     {

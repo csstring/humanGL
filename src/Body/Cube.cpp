@@ -31,7 +31,7 @@ void Cube::update(void)
 {
     for (uint32 i = 0; i < _buffer.size(); ++i)
     {
-        _buffer[i] = _translate * glm::toMat4(_rot) * _vertex[i];
+        _buffer[i] = _translate * math::toMat4(_rot) * _vertex[i];
     }
 }
 

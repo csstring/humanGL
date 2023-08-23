@@ -33,9 +33,9 @@ void Ground::update(void)
     for (const auto& it : _groundVertex)
         center += it;
     center /= 4;
-    glm::vec3 point0 = glm::normalize(_groundVertex[0] - center);
-    glm::vec3 point1 = glm::normalize(_groundVertex[1] - center);
-    _normal = glm::cross(point0, point1);
+    glm::vec3 point0 = math::normalize(_groundVertex[0] - center);
+    glm::vec3 point1 = math::normalize(_groundVertex[1] - center);
+    _normal = math::cross(point0, point1);
     _rot = glm::mat4(1.0f);
 }
 

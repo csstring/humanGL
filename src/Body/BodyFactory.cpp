@@ -18,7 +18,7 @@ CollisionCylinder* BodyFactory::makeCollisionCylinder(
     glm::vec3 position
 )
 {
-    glm::mat4 translate = glm::translate(glm::mat4(1.0f), glm::vec3(0,position.y,0)) * glm::toMat4(glm::rotation(glm::vec3(0,0,1), glm::vec3(0,1,0)));
+    glm::mat4 translate = math::translate(glm::mat4(1.0f), glm::vec3(0,position.y,0)) * math::toMat4(math::rotation(glm::vec3(0,0,1), glm::vec3(0,1,0)));
     CollisionCylinder* _collision = new CollisionCylinder(radius,height,glm::vec3(0.0f), translate);
     _collision->initialize(gPhysics, gScene);
     return _collision;

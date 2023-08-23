@@ -83,9 +83,7 @@ void Animation::findSameFrame(uint32 count)
         for (int i =0; i < curData->_childrens.size(); ++i)
         dataQueue.push(&curData->_childrens[i]);
     }
-    // errorRange += glm::abs(origin[0][0].x - origin[1][i].x);
-    // errorRange += glm::abs(origin[0][0].y - origin[1][i].y);
-    // errorRange += glm::abs(origin[0][0].z - origin[1][i].z);
+
     while (curCount < count)
     {
         frameList.clear();
@@ -95,9 +93,9 @@ void Animation::findSameFrame(uint32 count)
             float curError = 0;
             for (int j = 0; j < 31; ++j)
             {
-                curError += glm::abs(origin[j][0].x - origin[j][i].x);
-                curError += glm::abs(origin[j][0].y - origin[j][i].y);
-                curError += glm::abs(origin[j][0].z - origin[j][i].z);
+                curError += abs(origin[j][0].x - origin[j][i].x);
+                curError += abs(origin[j][0].y - origin[j][i].y);
+                curError += abs(origin[j][0].z - origin[j][i].z);
             }
             if (errorRange == 0)
                 errorRange = curError;

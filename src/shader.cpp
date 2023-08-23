@@ -118,7 +118,7 @@ void Shader::use(void)
 
 void Shader::setMat4(const std::string &name, glm::mat4 mat4) const
 {
-    glUniformMatrix4fv(glGetUniformLocation(_programId, name.c_str()),1, false, glm::value_ptr(mat4));
+    glUniformMatrix4fv(glGetUniformLocation(_programId, name.c_str()),1, false, &mat4[0].x);
 }
 
 void Shader::setUint(const std::string &name, unsigned int index) const

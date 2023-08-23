@@ -38,7 +38,7 @@ void Character::setTestLegIK(bool _isRight)
 
 void Character::rotationY(float radian)
 {
-    _worldRotation = glm::rotate(_worldRotation, radian, glm::vec3(0,1,0));
+    _worldRotation = math::rotate(_worldRotation, radian, glm::vec3(0,1,0));
 }
 
 glm::mat4 Character::getCharacterWorldPosition(void) const
@@ -103,7 +103,7 @@ void Character::worldPositionUpdate(float deltaTime)
     //     root.y -= _yError * deltaTime;
     // else if (t.y < _groundHight)
     //     root.y += _yError * deltaTime;
-    _worldTrans = glm::translate(glm::mat4(1.0f), root);
+    _worldTrans = math::translate(glm::mat4(1.0f), root);
 }
 
 void Character::update(const std::chrono::steady_clock::time_point& curTime, glm::vec3 eyeTarget, Physx* physx)

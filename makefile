@@ -19,9 +19,9 @@ GLFW_LIB_DIR = $(LIB_DIR)
 # 바이너리 파일
 TARGET = ./humanGL
 # 소스 파일 리스트. Searching in src, src/Body, src/IK, and src/Animation
-SOURCES = $(wildcard $(SRC_DIR)/*.cpp $(SRC_DIR)/Body/*.cpp $(SRC_DIR)/IK/*.cpp $(SRC_DIR)/AnimationBlend/*.cpp)
+SOURCES = $(wildcard $(SRC_DIR)/*.cpp $(SRC_DIR)/Body/*.cpp $(SRC_DIR)/Math/*.cpp $(SRC_DIR)/IK/*.cpp $(SRC_DIR)/AnimationBlend/*.cpp)
 # 오브젝트 파일 리스트
-OBJECTS = $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(patsubst $(SRC_DIR)/Body/%.cpp,$(OBJ_DIR)/%.o,$(patsubst $(SRC_DIR)/IK/%.cpp,$(OBJ_DIR)/%.o,$(patsubst $(SRC_DIR)/AnimationBlend/%.cpp,$(OBJ_DIR)/%.o,$(SOURCES)))))
+OBJECTS = $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(patsubst $(SRC_DIR)/Math/%.cpp,$(OBJ_DIR)/%.o,$(patsubst $(SRC_DIR)/Body/%.cpp,$(OBJ_DIR)/%.o,$(patsubst $(SRC_DIR)/IK/%.cpp,$(OBJ_DIR)/%.o,$(patsubst $(SRC_DIR)/AnimationBlend/%.cpp,$(OBJ_DIR)/%.o,$(SOURCES))))))
 
 all: $(TARGET)
 
@@ -41,6 +41,9 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/IK/%.cpp
 	$(CXX) $(CXXFLAGS) -I$(INC_DIR) -I$(INC_DIR)/physx -c $< -o $@
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/AnimationBlend/%.cpp
+	$(CXX) $(CXXFLAGS) -I$(INC_DIR) -I$(INC_DIR)/physx -c $< -o $@
+
+$(OBJ_DIR)/%.o: $(SRC_DIR)/Math/%.cpp
 	$(CXX) $(CXXFLAGS) -I$(INC_DIR) -I$(INC_DIR)/physx -c $< -o $@
 
 clean:
