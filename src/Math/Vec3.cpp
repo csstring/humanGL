@@ -1,4 +1,5 @@
 #include "math/Vec3.h"
+#include "math/Vec4.h"
 
 Vec3::Vec3(float x, float y, float z) : x(x), y(y), z(z)
 {}
@@ -6,6 +7,39 @@ Vec3::Vec3(float scalar) : x(scalar), y(scalar), z(scalar)
 {}
 Vec3::Vec3(const Vec3& v) : x(v.x), y(v.y), z(v.z)
 {}
+Vec3::Vec3():x(0), y(0), z(0)
+{}
+Vec3::Vec3(const Vec4& v) : x(v.x), y(v.y), z(v.z)
+{}
+float& Vec3::operator[](uint8 i)
+{
+	assert(i >= 0 && i < _length);
+		switch(i)
+		{
+		default:
+		case 0:
+			return x;
+		case 1:
+			return y;
+		case 2:
+			return z;
+		}
+}
+
+const float& Vec3::operator[](uint8 i) const
+{
+	assert(i >= 0 && i < _length);
+		switch(i)
+		{
+		default:
+		case 0:
+			return x;
+		case 1:
+			return y;
+		case 2:
+			return z;
+		}
+}
 
 Vec3& Vec3::operator=(Vec3 const& v)
 {
@@ -100,6 +134,11 @@ Vec3 operator+(float scalar, Vec3 const& v)
 		return Vec3(scalar + v.x,scalar + v.y,scalar + v.z);
 }
 
+Vec3 operator+(Vec3 const& v1, Vec3 const& v2)
+{
+		return Vec3(v1) += v2;
+}
+
 Vec3 operator-(Vec3 const& v, float scalar)
 {
 		return Vec3(v.x - scalar, v.y - scalar, v.z - scalar);
@@ -108,6 +147,11 @@ Vec3 operator-(Vec3 const& v, float scalar)
 Vec3 operator-(float scalar, Vec3 const& v)
 {
 		return Vec3( scalar - v.x, scalar - v.y, scalar - v.z);
+}
+
+Vec3 operator-(Vec3 const& v1, Vec3 const& v2)
+{
+		return Vec3(v1) -= v2;
 }
 
 Vec3 operator*(Vec3 const& v, float scalar)
@@ -120,6 +164,11 @@ Vec3 operator*(float scalar, Vec3 const& v)
 		return Vec3( scalar * v.x, scalar * v.y, scalar * v.z);
 }
 
+Vec3 operator*(Vec3 const& v1, Vec3 const& v2)
+{
+	return Vec3(v1) *= v2;
+}
+
 Vec3 operator/(Vec3 const& v, float scalar)
 {
 		return Vec3( v.x / scalar, v.y / scalar, v.z / scalar);
@@ -128,6 +177,11 @@ Vec3 operator/(Vec3 const& v, float scalar)
 Vec3 operator/(float scalar, Vec3 const& v)
 {
 		return Vec3( scalar / v.x, scalar / v.y, scalar / v.z);
+}
+
+Vec3 operator/(Vec3 const& v1, Vec3 const& v2)
+{
+	return Vec3(v1) /= v2;
 }
 
 bool operator==(Vec3 const& v1, Vec3 const& v2)

@@ -3,47 +3,51 @@
 #include "GLM/glm.hpp"
 #include "GLM/gtx/string_cast.hpp"
 const float PI = 3.141592;
+class Mat3;
+class Mat4;
+class Vec3;
+class Vec4;
 namespace math
 {
   float radians(float degrees);
 
-  float     dot(const glm::vec3& x, const glm::vec3& y);
-	float     dot(const glm::quat& a, const glm::quat& b);
-	glm::quat conjugate(const glm::quat& q);
-  glm::vec3 cross(const glm::vec3& x, const glm::vec3& y);
+  float     dot(const Vec3& x, const Vec3& y);
+	float     dot(const Quat& a, const Quat& b);
+	Quat conjugate(const Quat& q);
+  Vec3 cross(const Vec3& x, const Vec3& y);
 
-  glm::mat4 translate(const glm::mat4& m, const glm::vec3& v);
+  Mat4 translate(const Mat4& m, const Vec3& v);
 	
-  glm::mat4 inverse(const glm::mat4& m);
-  glm::mat3 inverse(const glm::mat3& m);
-	glm::quat inverse(const glm::quat& q);
+  Mat4 inverse(const Mat4& m);
+  Mat3 inverse(const Mat3& m);
+	Quat inverse(const Quat& q);
 
-  glm::vec3 normalize(const glm::vec3& v);
-  glm::mat4 rotate(const glm::mat4& m, float radians, const glm::vec3& v);
-  glm::mat4 rotate(float radians, const glm::vec3& v);
+  Vec3 normalize(const Vec3& v);
+  Mat4 rotate(const Mat4& m, float radians, const Vec3& v);
+  Mat4 rotate(float radians, const Vec3& v);
 
-  glm::quat quatCast(const glm::mat4& m4);
-  glm::quat quatCast(const glm::mat3& m3);
-  glm::mat3 toMat3(const glm::quat& q);
-  glm::mat4 toMat4(const glm::quat& q);
+  Quat quatCast(const Mat4& m4);
+  Quat quatCast(const Mat3& m3);
+  Mat3 toMat3(const Quat& q);
+  Mat4 toMat4(const Quat& q);
 
-  glm::quat catmullRom(const glm::quat& v1, const glm::quat& v2, const glm::quat& v3, const glm::quat& v4, const float& s);
-  glm::vec3 catmullRom(const glm::vec3& v1, const glm::vec3& v2, const glm::vec3& v3, const glm::vec3& v4, const float& s);
+  Quat catmullRom(const Quat& v1, const Quat& v2, const Quat& v3, const Quat& v4, const float& s);
+  Vec3 catmullRom(const Vec3& v1, const Vec3& v2, const Vec3& v3, const Vec3& v4, const float& s);
 
-  float angle(const glm::quat& x);
-	glm::vec3 axis(const glm::quat& x);
-	glm::quat angleAxis(const float& angle, const glm::vec3& v);
+  float angle(const Quat& x);
+	Vec3 axis(const Quat& x);
+	Quat angleAxis(const float& angle, const Vec3& v);
 	
-	glm::vec3 eulerAngles(const glm::quat& x);
-	float roll(const glm::quat& q);
-	float pitch(const glm::quat& q);
-	float yaw(const glm::quat& q);
+	Vec3 eulerAngles(const Quat& x);
+	float roll(const Quat& q);
+	float pitch(const Quat& q);
+	float yaw(const Quat& q);
 
-	float length2(const glm::quat& q);
-	float length(const glm::vec3& v);
-	glm::quat rotation(const glm::vec3& orig,const glm::vec3& dest);
+	float length2(const Quat& q);
+	float length(const Vec3& v);
+	Quat rotation(const Vec3& orig,const Vec3& dest);
 
-	glm::vec3 mix(const glm::vec3& x, const glm::vec3& y, const float& a);
+	Vec3 mix(const Vec3& x, const Vec3& y, const float& a);
 	float mix(const float& x, const float& y, const float& a);
-	glm::quat slerp(const glm::quat& x, const glm::quat& y, const float& a);
+	Quat slerp(const Quat& x, const Quat& y, const float& a);
 }

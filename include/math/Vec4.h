@@ -1,7 +1,10 @@
 #pragma once
-
+#include "Common.h"
+class Vec3;
 class Vec4
 {
+	private:
+		uint8 _length = 4;
 	public:
 		union { float x, r, s; };
 		union { float y, g, t; };
@@ -10,9 +13,13 @@ class Vec4
   public:
     explicit Vec4(float x, float y, float z, float w);
     explicit Vec4(float scalar);
+		Vec4();
     Vec4(const Vec4& v);
+		Vec4(float x, const Vec3& v);
+		Vec4(const Vec3& v, float w);
     ~Vec4(){};
-
+		float& operator[](uint8 i);
+		const float& operator[](uint8 i) const;
 		Vec4& operator=(Vec4 const& v);
 		Vec4& operator+=(float scalar);
 		Vec4& operator+=(Vec4 const& v);
@@ -29,11 +36,15 @@ Vec4 operator+(Vec4 const& v);
 Vec4 operator-(Vec4 const& v);
 Vec4 operator+(Vec4 const& v, float scalar);
 Vec4 operator+(float scalar, Vec4 const& v);
+Vec4 operator+(Vec4 const& v1, Vec4 const& v2);
 Vec4 operator-(Vec4 const& v, float scalar);
 Vec4 operator-(float scalar, Vec4 const& v);
+Vec4 operator-(Vec4 const& v1, Vec4 const& v2);
 Vec4 operator*(Vec4 const& v, float scalar);
 Vec4 operator*(float scalar, Vec4 const& v);
+Vec4 operator*(Vec4 const& v1, Vec4 const& v2);
 Vec4 operator/(Vec4 const& v, float scalar);
 Vec4 operator/(float scalar, Vec4 const& v);
+Vec4 operator/(Vec4 const& v1, Vec4 const& v2);
 bool operator==(Vec4 const& v1, Vec4 const& v2);
 bool operator!=(Vec4 const& v1, Vec4 const& v2);

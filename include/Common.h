@@ -8,6 +8,7 @@
 #include "GLM/gtx/string_cast.hpp"
 #include "PxPhysicsAPI.h"
 #include <ostream>
+#include <cmath>
 #include "math/Math.h"
 
 typedef signed char         int8;
