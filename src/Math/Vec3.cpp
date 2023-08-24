@@ -1,6 +1,8 @@
 #include "math/Vec3.h"
 #include "math/Vec4.h"
 
+namespace math
+{
 Vec3::Vec3(float x, float y, float z) : x(x), y(y), z(z)
 {}
 Vec3::Vec3(float scalar) : x(scalar), y(scalar), z(scalar)
@@ -192,4 +194,5 @@ bool operator==(Vec3 const& v1, Vec3 const& v2)
 bool operator!=(Vec3 const& v1, Vec3 const& v2)
 {
 	return !(v1 == v2);
+}
 }

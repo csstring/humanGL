@@ -1,6 +1,8 @@
 #pragma once
 #include "Common.h"
 class Vec3;
+namespace math
+{
 class Vec4
 {
 	private:
@@ -48,3 +50,4 @@ Vec4 operator/(float scalar, Vec4 const& v);
 Vec4 operator/(Vec4 const& v1, Vec4 const& v2);
 bool operator==(Vec4 const& v1, Vec4 const& v2);
 bool operator!=(Vec4 const& v1, Vec4 const& v2);
+}
