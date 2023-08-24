@@ -25,7 +25,7 @@ class Skeleton
         int32 findBoneIndex(const std::string& name) const;
         float getSkeletonHeight(void);
         float getSkeletonWidth(void);
-        glm::vec3 getCharLocalPosition(BONEID boneID);
+        math::Vec3 getCharLocalPosition(BONEID boneID);
     private:
         std::string       _programName;
         bool              _isDeg;

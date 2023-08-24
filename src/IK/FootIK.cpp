@@ -1,35 +1,34 @@
 #include "IK/FootIK.h"
-#include "GLM/gtx/quaternion.hpp"
-#include "GLM/gtc/quaternion.hpp"
 #include "Controller.h"
 #include "Character.h"
 #include "Bone.h"
 #include "IK/IKUtility.h"
 #include "Physx.h"
+#include "math/Math.h"
 //발바닥 조인트 두개 다 검사
 void FootIK::setCharGroundHight(float& charGroundHight)
 {
     charGroundHight = _groundHight;
 }
 
-void FootIK::setTestOption(glm::vec3 position, glm::vec3 normal, glm::mat4 charLocalToWorld)
+void FootIK::setTestOption(math::Vec3 position, math::Vec3 normal, math::Mat4 charLocalToWorld)
 {
     _targetOn = true;
-    _targetPosition = math::inverse(charLocalToWorld) * glm::vec4(position,1);
-    _groundNormal = math::inverse(charLocalToWorld) * glm::vec4(normal,0);
+    _targetPosition = math::inverse(charLocalToWorld) * math::Vec4(position,1);
+    _groundNormal = math::inverse(charLocalToWorld) * math::Vec4(normal,0);
 }
 
 void FootIK::isOffGroundCheck(
-    const std::vector<glm::vec3>& inCharLocalPos, 
+    const std::vector<math::Vec3>& inCharLocalPos, 
     Physx* physx, 
-    glm::mat4 charLocalToWorld)
+    math::Mat4 charLocalToWorld)
 {
     bool curIsOffGround;
-    glm::vec3 footPos = charLocalToWorld * glm::vec4(inCharLocalPos[3],1);
-    glm::vec3 tibiaPos = charLocalToWorld * glm::vec4(inCharLocalPos[2],1);
-    glm::vec3 femurPos = charLocalToWorld * glm::vec4(inCharLocalPos[1],1);
+    math::Vec3 footPos = charLocalToWorld * math::Vec4(inCharLocalPos[3],1);
+    math::Vec3 tibiaPos = charLocalToWorld * math::Vec4(inCharLocalPos[2],1);
+    math::Vec3 femurPos = charLocalToWorld * math::Vec4(inCharLocalPos[1],1);
 
-    glm::vec3 startPos = math::mix(footPos, tibiaPos, 0.5f);
+    math::Vec3 startPos = math::mix(footPos, tibiaPos, 0.5f);
     startPos.y +=5;
     physx::PxSweepBuffer hit;
     physx::PxVec3 sweepDirection(0,-1,0);
@@ -44,7 +43,7 @@ void FootIK::isOffGroundCheck(
         _isOffGround = false;
 }
 
-bool FootIK::isStartFindTarget(const std::vector<glm::vec3>& inCharLocalPos)
+bool FootIK::isStartFindTarget(const std::vector<math::Vec3>& inCharLocalPos)
 {
     if (inCharLocalPos[2].y - inCharLocalPos[3].y > 0.98)
         return true;
@@ -53,22 +52,22 @@ bool FootIK::isStartFindTarget(const std::vector<glm::vec3>& inCharLocalPos)
 
 
 bool FootIK::findTargetObject(
-    const std::vector<glm::vec3>& inCharLocalPos, 
+    const std::vector<math::Vec3>& inCharLocalPos, 
     Physx* physx, 
-    glm::mat4 charLocalToWorld,
-    glm::vec3 tmpMoveDir
+    math::Mat4 charLocalToWorld,
+    math::Vec3 tmpMoveDir
 )
 {
-    glm::vec3 tibiaPos = charLocalToWorld * glm::vec4(inCharLocalPos[3],1);
-    glm::vec3 targetPos;
-    // if (tmpMoveDir == glm::vec3(0.0f))
-    //     tibiaPos = charLocalToWorld * glm::vec4(_prevTibiaPos,1);
+    math::Vec3 tibiaPos = charLocalToWorld * math::Vec4(inCharLocalPos[3],1);
+    math::Vec3 targetPos;
+    // if (tmpMoveDir == math::Vec3(0.0f))
+    //     tibiaPos = charLocalToWorld * math::Vec4(_prevTibiaPos,1);
    
     targetPos = tibiaPos + tmpMoveDir;
     targetPos.y += 5;//fix
 
     physx::PxSweepBuffer hit;
-    glm::vec3 sweepDirection(0,-1,0);
+    math::Vec3 sweepDirection(0,-1,0);
     float radius = 1.0f / 5.0f;
     bool hitFlag = physx->sweepTestUseSphere(20, radius, targetPos, sweepDirection, hit);
 
@@ -81,8 +80,8 @@ bool FootIK::findTargetObject(
         return false;
     }
     
-    glm::vec3 worldTarget(hit.block.position.x, hit.block.position.y, hit.block.position.z);
-    glm::vec3 worldNormal(hit.block.normal.x, hit.block.normal.y, hit.block.normal.z);
+    math::Vec3 worldTarget(hit.block.position.x, hit.block.position.y, hit.block.position.z);
+    math::Vec3 worldNormal(hit.block.normal.x, hit.block.normal.y, hit.block.normal.z);
     std::vector<float> disVector;
     stairDir tmpDir;
         
@@ -94,14 +93,14 @@ bool FootIK::findTargetObject(
         tmpDir = stairDir::NORMAL;
 
     //reach fail
-    if (reachable(inCharLocalPos,disVector ,math::inverse(charLocalToWorld) * glm::vec4(worldTarget,1)) == false && tmpDir != stairDir::DOWNSTAIR)
+    if (reachable(inCharLocalPos,disVector ,math::inverse(charLocalToWorld) * math::Vec4(worldTarget,1)) == false && tmpDir != stairDir::DOWNSTAIR)
         return false;
 
-    if (tmpMoveDir != glm::vec3(0.0f))
+    if (tmpMoveDir != math::Vec3(0.0f))
         _stairDir = tmpDir;
             
-    _targetPosition = math::inverse(charLocalToWorld) * glm::vec4(worldTarget,1);
-    _groundNormal = math::inverse(charLocalToWorld) * glm::vec4(worldNormal, 0);
+    _targetPosition = math::inverse(charLocalToWorld) * math::Vec4(worldTarget,1);
+    _groundNormal = math::inverse(charLocalToWorld) * math::Vec4(worldNormal, 0);
     _targetOn = true;
     _groundHight = hit.block.position.y;
     _curTouchBody = hit.block.actor;
@@ -109,10 +108,10 @@ bool FootIK::findTargetObject(
     return true;
 }
 
-bool FootIK::reachable(const std::vector<glm::vec3>& inCharacterPos, std::vector<float>& distance, glm::vec3 footPosition)
+bool FootIK::reachable(const std::vector<math::Vec3>& inCharacterPos, std::vector<float>& distance, math::Vec3 footPosition)
 {
-    glm::vec3 start = inCharacterPos.front();
-    glm::vec3 end = inCharacterPos.back();
+    math::Vec3 start = inCharacterPos.front();
+    math::Vec3 end = inCharacterPos.back();
     float targetDistance = math::length(footPosition - start);
     float curDistance = 0;
     for (uint32 i = 1; i < inCharacterPos.size(); ++i)
@@ -127,12 +126,12 @@ bool FootIK::reachable(const std::vector<glm::vec3>& inCharacterPos, std::vector
     return true;
 }
 
-void FootIK::positionFixLimitAngleBackWard(glm::vec3& start, glm::vec3& end, glm::vec3 endBoneDir,const Bone& endBone)
+void FootIK::positionFixLimitAngleBackWard(math::Vec3& start, math::Vec3& end, math::Vec3 endBoneDir,const Bone& endBone)
 {
-    glm::vec3 initialDirection = math::normalize(end - start);
-    glm::vec3 targetDirection = math::normalize(endBoneDir);
-    glm::quat rotation = math::rotation(initialDirection, targetDirection);
-    glm::vec3 eulerAngle = math::eulerAngles(rotation);
+    math::Vec3 initialDirection = math::normalize(end - start);
+    math::Vec3 targetDirection = math::normalize(endBoneDir);
+    math::Quat rotation = math::rotation(initialDirection, targetDirection);
+    math::Vec3 eulerAngle = math::eulerAngles(rotation);
 
     for (auto& limit : endBone._limits)
     {
@@ -146,20 +145,20 @@ void FootIK::positionFixLimitAngleBackWard(glm::vec3& start, glm::vec3& end, glm
         else if (dof == DOF::RZ)
             eulerAngle.z = std::clamp(eulerAngle.z, min, max);
     }
-    rotation = glm::quat(eulerAngle);
+    rotation = math::Quat(eulerAngle);
 
-    glm::vec3 correctPos = math::inverse(rotation) * targetDirection * math::length(end - start);
+    math::Vec3 correctPos = math::inverse(rotation) * targetDirection * math::length(end - start);
 
     start = end - correctPos;
 
 }
 
-void FootIK::positionFixLimitAngleForWard(glm::vec3& start, glm::vec3& end, glm::vec3 startBoneDir,const Bone& endBone)
+void FootIK::positionFixLimitAngleForWard(math::Vec3& start, math::Vec3& end, math::Vec3 startBoneDir,const Bone& endBone)
 {
-    glm::vec3 initialDirection = math::normalize(startBoneDir);
-    glm::vec3 targetDirection = math::normalize(end - start);
-    glm::quat rotation = math::rotation(initialDirection, targetDirection);
-    glm::vec3 eulerAngle = math::eulerAngles(rotation);
+    math::Vec3 initialDirection = math::normalize(startBoneDir);
+    math::Vec3 targetDirection = math::normalize(end - start);
+    math::Quat rotation = math::rotation(initialDirection, targetDirection);
+    math::Vec3 eulerAngle = math::eulerAngles(rotation);
 
     for (auto& limit : endBone._limits)
     {
@@ -173,17 +172,17 @@ void FootIK::positionFixLimitAngleForWard(glm::vec3& start, glm::vec3& end, glm:
         else if (dof == DOF::RZ)
             eulerAngle.z = std::clamp(eulerAngle.z, min, max);
     }
-    rotation = glm::quat(eulerAngle);
+    rotation = math::Quat(eulerAngle);
 
-    glm::vec3 correctPos = rotation * initialDirection * math::length(end - start);
+    math::Vec3 correctPos = rotation * initialDirection * math::length(end - start);
     end = start + correctPos;
 }
 
-void FootIK::fixBendingAngle(glm::vec3& start, glm::vec3& mid, glm::vec3& end)
+void FootIK::fixBendingAngle(math::Vec3& start, math::Vec3& mid, math::Vec3& end)
 {
-    glm::vec3 angle1 = math::normalize(start - mid);
-    glm::vec3 angle2 = math::normalize(end - mid);
-    glm::quat bendRot = math::rotation(angle1, angle2);
+    math::Vec3 angle1 = math::normalize(start - mid);
+    math::Vec3 angle2 = math::normalize(end - mid);
+    math::Quat bendRot = math::rotation(angle1, angle2);
 
     if (math::axis(bendRot).x < 0)
         return;
@@ -192,7 +191,7 @@ void FootIK::fixBendingAngle(glm::vec3& start, glm::vec3& mid, glm::vec3& end)
     angle2 = math::normalize(end - start);
     bendRot = math::rotation(angle1, angle2);
     
-    glm::vec3 dir = bendRot * angle2;
+    math::Vec3 dir = bendRot * angle2;
     mid = start + dir * math::length(start - mid);
 
     angle1 = math::normalize(start - mid);
@@ -206,17 +205,17 @@ void FootIK::fixBendingAngle(glm::vec3& start, glm::vec3& mid, glm::vec3& end)
     }
 }
 
-bool FootIK::saveBlendingAnimation(std::vector<glm::vec3>& inCharLocalPos, std::vector<glm::mat4>& inCharLocalRot, glm::vec3 curFootPos)
+bool FootIK::saveBlendingAnimation(std::vector<math::Vec3>& inCharLocalPos, std::vector<math::Mat4>& inCharLocalRot, math::Vec3 curFootPos)
 {
     std::vector<float> distance;
-    glm::vec3 parentDir = math::normalize(inCharLocalPos[2] - inCharLocalPos[3]);
-    glm::quat rot = math::rotation(_groundNormal, parentDir);
-    glm::vec3 axis = math::axis(rot);
+    math::Vec3 parentDir = math::normalize(inCharLocalPos[2] - inCharLocalPos[3]);
+    math::Quat rot = math::rotation(_groundNormal, parentDir);
+    math::Vec3 axis = math::axis(rot);
     float radians = math::radians(90.0f) - math::angle(rot);
-    glm::vec3 groundDir = math::angleAxis(radians, axis) * parentDir;
+    math::Vec3 groundDir = math::angleAxis(radians, axis) * parentDir;
     groundDir = math::mix(parentDir, groundDir, _blendingRatio);
 
-    glm::vec3 tmpTarget = curFootPos;
+    math::Vec3 tmpTarget = curFootPos;
     if (_targetPosition.y > _firstHitHight)
         tmpTarget.y = math::mix(tmpTarget.y, _targetPosition.y, _blendingRatio);
     else
@@ -224,12 +223,12 @@ bool FootIK::saveBlendingAnimation(std::vector<glm::vec3>& inCharLocalPos, std::
 
     if (_bonePos[0].y == 0)
         _bonePos[0].y = _targetPosition.y - inCharLocalPos[3].y;
-    glm::vec3 footPosInChar = tmpTarget + groundDir * math::length(inCharLocalPos[2] - inCharLocalPos[3]);
+    math::Vec3 footPosInChar = tmpTarget + groundDir * math::length(inCharLocalPos[2] - inCharLocalPos[3]);
     
     if (reachable(inCharLocalPos, distance, footPosInChar) == false)//fix me 
     {}
     
-    glm::vec3 start = inCharLocalPos.front();
+    math::Vec3 start = inCharLocalPos.front();
     uint32 iterCount = 0;
     while (math::length(footPosInChar - inCharLocalPos[2]) > 0.1)
     {
@@ -241,7 +240,7 @@ bool FootIK::saveBlendingAnimation(std::vector<glm::vec3>& inCharLocalPos, std::
         }
             
         inCharLocalPos[2] = footPosInChar;
-        glm::vec3 BoneDir;
+        math::Vec3 BoneDir;
         for(uint16 i = _boneIndexVec.size()-2; i >=1; --i)
         {
             float r = math::length(inCharLocalPos[i] - inCharLocalPos[i-1]);
@@ -262,7 +261,7 @@ bool FootIK::saveBlendingAnimation(std::vector<glm::vec3>& inCharLocalPos, std::
             if (i+1 == 1)
                 fixBendingAngle(start, inCharLocalPos[1], footPosInChar);
             if (i == 0)
-                BoneDir = inCharLocalRot[i] * glm::vec4(_boneVector[_boneIndexVec[0]]._direction,0);
+                BoneDir = inCharLocalRot[i] * math::Vec4(_boneVector[_boneIndexVec[0]]._direction,0);
             else
                 BoneDir = inCharLocalPos[i] - inCharLocalPos[i-1];
             positionFixLimitAngleForWard(inCharLocalPos[i], inCharLocalPos[i+1], BoneDir, _boneVector[_boneIndexVec[i+1]]);
@@ -272,12 +271,12 @@ bool FootIK::saveBlendingAnimation(std::vector<glm::vec3>& inCharLocalPos, std::
     inCharLocalPos[3] = tmpTarget;
     for (int i = 3; i >= 1; --i)
     {
-        glm::vec3 inCharDir = math::normalize(inCharLocalPos[i] - inCharLocalPos[i-1]);
+        math::Vec3 inCharDir = math::normalize(inCharLocalPos[i] - inCharLocalPos[i-1]);
         inCharLocalRot[i] = math::toMat4(math::rotation(_boneVector[_boneIndexVec[i]]._direction ,inCharDir));
   
-        glm::mat4 trans = math::translate(glm::mat4(1.0f), inCharLocalPos[i-1]) * inCharLocalRot[i-1];
-        _bonePos[i] = math::inverse(trans) * glm::vec4(inCharLocalPos[i], 1);
-        _boneRot[i] = glm::quat(math::inverse(trans) * inCharLocalRot[i]);
+        math::Mat4 trans = math::translate(math::Mat4(1.0f), inCharLocalPos[i-1]) * inCharLocalRot[i-1];
+        _bonePos[i] = math::inverse(trans) * math::Vec4(inCharLocalPos[i], 1);
+        _boneRot[i] = math::Quat(math::inverse(trans) * inCharLocalRot[i]);
     }
 
     return true;
@@ -285,8 +284,8 @@ bool FootIK::saveBlendingAnimation(std::vector<glm::vec3>& inCharLocalPos, std::
 
 void FootIK::solveIK(
     std::vector<BoneLocal>& _boneLocalVector, 
-    const glm::mat4& worldRotation, 
-    const glm::mat4& worldTranslate, 
+    const math::Mat4& worldRotation, 
+    const math::Mat4& worldTranslate, 
     const Controller& controller,
     const std::chrono::steady_clock::time_point& curTime,
     LowerState curState,
@@ -294,18 +293,18 @@ void FootIK::solveIK(
 )
 {
     _curTime = curTime;
-    std::vector<glm::vec3> inCharLocalPos;
-    std::vector<glm::mat4> inCharLocalRot;
-    std::vector<glm::mat4> inCharTrans;
+    std::vector<math::Vec3> inCharLocalPos;
+    std::vector<math::Mat4> inCharLocalRot;
+    std::vector<math::Mat4> inCharTrans;
     std::vector<float> distance;
 
     for (uint32 i : _boneIndexVec)
     {
         inCharTrans.push_back(controller.getMatrixInCharLocal(i, controller.getPlayer()->getCharacterSkeleton(), _boneLocalVector));
-        inCharLocalPos.push_back(inCharTrans.back() * glm::vec4(0,0,0,1));
-        inCharLocalRot.push_back(glm::mat3(inCharTrans.back()));
+        inCharLocalPos.push_back(inCharTrans.back() * math::Vec4(0,0,0,1));
+        inCharLocalRot.push_back(math::Mat3(inCharTrans.back()));
     }
-    glm::mat4 charLocalToWorld = worldTranslate * worldRotation;
+    math::Mat4 charLocalToWorld = worldTranslate * worldRotation;
 
     if (_isFirst == true)
     {
@@ -314,9 +313,9 @@ void FootIK::solveIK(
     }
     //save velocity
     {
-        glm::vec3 beforePos = charLocalToWorld * glm::vec4(0,0,0,1);
-        glm::mat4 curRootTrans = controller.getMatrixInCharLocal(BONEID::ROOT, controller.getPlayer()->getCharacterSkeleton(), _boneLocalVector);
-        glm::vec3 curPos = charLocalToWorld * curRootTrans * glm::vec4(0,0,0,1);
+        math::Vec3 beforePos = charLocalToWorld * math::Vec4(0,0,0,1);
+        math::Mat4 curRootTrans = controller.getMatrixInCharLocal(BONEID::ROOT, controller.getPlayer()->getCharacterSkeleton(), _boneLocalVector);
+        math::Vec3 curPos = charLocalToWorld * curRootTrans * math::Vec4(0,0,0,1);
         saveVelocity(beforePos, curPos);
     }
 
@@ -328,12 +327,12 @@ void FootIK::solveIK(
 
     if (isStartFindTarget(inCharLocalPos) && _isRootAnimationOn == false && _rootRatio <= 0)// || _retargetTime >= 1000)
     {   
-        glm::mat4 rootTrans = charLocalToWorld * controller.getMatrixInCharLocal(BONEID::ROOT, controller.getPlayer()->getCharacterSkeleton(), _boneLocalVector);
-        glm::vec3 foot1Pos = controller.getMatrixInCharLocal(BONEID::RFOOT, controller.getPlayer()->getCharacterSkeleton(), _boneLocalVector) * glm::vec4(0,0,0,1);
-        glm::vec3 foot2Pos = controller.getMatrixInCharLocal(BONEID::LFOOT, controller.getPlayer()->getCharacterSkeleton(), _boneLocalVector) * glm::vec4(0,0,0,1);
+        math::Mat4 rootTrans = charLocalToWorld * controller.getMatrixInCharLocal(BONEID::ROOT, controller.getPlayer()->getCharacterSkeleton(), _boneLocalVector);
+        math::Vec3 foot1Pos = controller.getMatrixInCharLocal(BONEID::RFOOT, controller.getPlayer()->getCharacterSkeleton(), _boneLocalVector) * math::Vec4(0,0,0,1);
+        math::Vec3 foot2Pos = controller.getMatrixInCharLocal(BONEID::LFOOT, controller.getPlayer()->getCharacterSkeleton(), _boneLocalVector) * math::Vec4(0,0,0,1);
         foot1Pos.y = 0;
         foot2Pos.y = 0;
-        glm::vec3 moveDir = math::length(foot1Pos - foot2Pos) * 1.6f *  math::normalize(rootTrans * glm::vec4(0,0,1,0));
+        math::Vec3 moveDir = math::length(foot1Pos - foot2Pos) * 1.6f *  math::normalize(rootTrans * math::Vec4(0,0,1,0));
 
         if (findTargetObject(inCharLocalPos, physx, charLocalToWorld, moveDir) == true)
         {
@@ -346,7 +345,7 @@ void FootIK::solveIK(
     }
     else if (_isMoveAnimation == false)
     {
-        if (findTargetObject(inCharLocalPos, physx, charLocalToWorld, glm::vec3(0.0f)) == true)
+        if (findTargetObject(inCharLocalPos, physx, charLocalToWorld, math::Vec3(0.0f)) == true)
         {
             _bonePos[0].y = 0;
             _rootRatio = 0;
@@ -379,9 +378,9 @@ void FootIK::solveIK(
         // std::cout <<"_isMoveAnimation" << _isMoveAnimation << std::endl;
         // std::cout <<"_targetOn " << _targetOn << std::endl;
     } else {
-        // std::cout << "foot pos" << glm::to_string(charLocalToWorld * glm::vec4(inCharLocalPos[2],1)) << std::endl;
-        // std::cout << "tibia pos" << glm::to_string(charLocalToWorld * glm::vec4(inCharLocalPos[3],1)) << std::endl;
-        // std::cout << "target pos" << glm::to_string(charLocalToWorld * glm::vec4(_targetPosition,1)) << std::endl;
+        // std::cout << "foot pos" << glm::to_string(charLocalToWorld * math::Vec4(inCharLocalPos[2],1)) << std::endl;
+        // std::cout << "tibia pos" << glm::to_string(charLocalToWorld * math::Vec4(inCharLocalPos[3],1)) << std::endl;
+        // std::cout << "target pos" << glm::to_string(charLocalToWorld * math::Vec4(_targetPosition,1)) << std::endl;
         // std::cout <<"_targetOn " << _targetOn << std::endl;
         // std::cout <<"_blendingRatio" << _blendingRatio << std::endl;
     }
@@ -412,16 +411,16 @@ void FootIK::solveIK(
         _isMoveAnimation = false;
 }
 
-float FootIK::getFirstHitHight(const glm::mat4& charLocalToWorld, const glm::vec3& inCharPos, Physx* physx)
+float FootIK::getFirstHitHight(const math::Mat4& charLocalToWorld, const math::Vec3& inCharPos, Physx* physx)
 {
     physx::PxSweepBuffer hit;
-    glm::vec3 sweepDirection(0,-1,0);
-    glm::vec4 inWorldPos = charLocalToWorld * glm::vec4(inCharPos, 1);
+    math::Vec3 sweepDirection(0,-1,0);
+    math::Vec4 inWorldPos = charLocalToWorld * math::Vec4(inCharPos, 1);
     inWorldPos.y += 5;
     bool hitFlag = physx->sweepTestUseSphere(100, 0.3, inWorldPos, sweepDirection, hit);
-    inWorldPos = glm::vec4(hit.block.position.x, hit.block.position.y, hit.block.position.z,1);
+    inWorldPos = math::Vec4(hit.block.position.x, hit.block.position.y, hit.block.position.z,1);
 
-    glm::vec3 inCharHitPos = math::inverse(charLocalToWorld) * inWorldPos;
+    math::Vec3 inCharHitPos = math::inverse(charLocalToWorld) * inWorldPos;
     if (hitFlag == false)
         return -100000;
     else

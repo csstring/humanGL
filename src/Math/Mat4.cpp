@@ -1,17 +1,18 @@
 #include "math/Mat4.h"
 #include "math/Mat3.h"
 #include "math/Math.h"
+#include "Common.h"
 namespace math
 {
-  Vec4& Mat4::operator[](uint8 i)
+  Vec4& Mat4::operator[](int i)
   {
-    assert(i < _length);
+    assert(i < 4);
 		return this->_value[i];
   }
   
-  const Vec4& Mat4::operator[](uint8 i) const
+  const Vec4& Mat4::operator[](int i) const
   {
-    assert(i < _length);
+    assert(i < 4);
 		return this->_value[i];
   }
 

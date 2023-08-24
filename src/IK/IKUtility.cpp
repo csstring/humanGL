@@ -1,10 +1,10 @@
 #include "IK/IKUtility.h"
 #include "Bone.h"
 #include "EnumHeader.h"
-
-bool limitAngleCheck(const Bone& bone, const glm::quat& boneRot)
+#include "math/Math.h"
+bool limitAngleCheck(const Bone& bone, const math::Quat& boneRot)
 {
-    glm::vec3 eulerAngle = math::eulerAngles(boneRot);
+    math::Vec3 eulerAngle = math::eulerAngles(boneRot);
 
     for (auto& limit : bone._limits)
     {

@@ -1,6 +1,6 @@
 #include "math/Vec3.h"
 #include "math/Vec4.h"
-
+#include "Common.h"
 namespace math
 {
 Vec3::Vec3(float x, float y, float z) : x(x), y(y), z(z)
@@ -13,9 +13,9 @@ Vec3::Vec3():x(0), y(0), z(0)
 {}
 Vec3::Vec3(const Vec4& v) : x(v.x), y(v.y), z(v.z)
 {}
-float& Vec3::operator[](uint8 i)
+float& Vec3::operator[](int i)
 {
-	assert(i >= 0 && i < _length);
+	assert(i >= 0 && i < 3);
 		switch(i)
 		{
 		default:
@@ -28,9 +28,9 @@ float& Vec3::operator[](uint8 i)
 		}
 }
 
-const float& Vec3::operator[](uint8 i) const
+const float& Vec3::operator[](int i) const
 {
-	assert(i >= 0 && i < _length);
+	assert(i >= 0 && i < 3);
 		switch(i)
 		{
 		default:

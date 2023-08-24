@@ -17,8 +17,8 @@ class Character
     private:
         std::vector<uint32>    VAO, VBO, VBC;
         std::vector<BoneLocal> _boneLocalVector;
-        glm::mat4              _worldTrans;
-        glm::mat4              _worldRotation;
+        math::Mat4              _worldTrans;
+        math::Mat4              _worldRotation;
         const Skeleton&        _skeleton;
         const Controller&      _controller;
         bool                   _isFirst;
@@ -50,10 +50,10 @@ class Character
         };
         void initialize(void);
         const Skeleton& getCharacterSkeleton(void) const {return _skeleton;};
-        void update(const std::chrono::steady_clock::time_point& curTime, glm::vec3 eyeTarget, Physx* physx);
+        void update(const std::chrono::steady_clock::time_point& curTime, math::Vec3 eyeTarget, Physx* physx);
         void draw(void);
         void rotationY(float radian);
-        glm::mat4 getCharacterWorldPosition(void) const;
+        math::Mat4 getCharacterWorldPosition(void) const;
         const std::vector<BoneLocal>& getCharLocalVector(void) const {return _boneLocalVector;};
         void setTestLegIK(bool _isRight);
 };

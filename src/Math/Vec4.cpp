@@ -1,5 +1,6 @@
 #include "math/Vec4.h"
 #include "math/Vec3.h"
+#include "Common.h"
 namespace math
 {
 Vec4::Vec4(float x, float y, float z, float w) : x(x), y(y), z(z), w(w)
@@ -14,9 +15,9 @@ Vec4::Vec4(float x, const Vec3& v) : x(x), y(v.x), z(v.y), w(v.z)
 {}
 Vec4::Vec4(const Vec3& v, float w) : x(v.x), y(v.y), z(v.z), w(w)
 {}
-float& Vec4::operator[](uint8 i)
+float& Vec4::operator[](int i)
 {
-	assert(i >= 0 && i < _length);
+	assert(i >= 0 && i < 4);
 		switch(i)
 		{
 		default:
@@ -30,9 +31,9 @@ float& Vec4::operator[](uint8 i)
 			return w;
 		}
 }
-const float& Vec4::operator[](uint8 i) const
+const float& Vec4::operator[](int i) const
 {
-	assert(i >= 0 && i < _length);
+	assert(i >= 0 && i < 4);
 		switch(i)
 		{
 		default:

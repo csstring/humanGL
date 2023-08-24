@@ -1,20 +1,21 @@
 #pragma once
 #include "math/Vec4.h"
-#include "Common.h"
+namespace math
+{
+	class Mat3;
+}
 
-class Mat3;
 namespace math
 {
   class Mat4
   {
     private:
       Vec4 _value[4];
-      const uint8   _length = 4;
 
     public:
 
-      Vec4& operator[](uint8 i);
-      const Vec4& operator[](uint8 i) const;
+      Vec4& operator[](int i);
+      const Vec4& operator[](int i) const;
 
       explicit Mat4();
 		  explicit Mat4(const Mat4& m);

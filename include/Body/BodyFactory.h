@@ -1,5 +1,5 @@
 #pragma once
-#include "../Common.h"
+#include "Common.h"
 
 class Character;
 class Skeleton;
@@ -11,5 +11,5 @@ class BodyFactory
         BodyFactory(){};
         ~BodyFactory(){};
         Character* makeCharacter(const Skeleton& _skeleton, const Controller& controller, CollisionCylinder* collisionMesh = nullptr);
-        CollisionCylinder* makeCollisionCylinder(physx::PxScene* gScene, physx::PxPhysics* gPhysics, float radius, float height, glm::vec3 position);
+        CollisionCylinder* makeCollisionCylinder(physx::PxScene* gScene, physx::PxPhysics* gPhysics, float radius, float height, math::Vec3 position);
 };

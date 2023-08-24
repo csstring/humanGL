@@ -4,16 +4,17 @@
 #include "math/Mat4.h"
 #include "math/Mat4.h"
 #include "math/Math.h"
+#include "Common.h"
 namespace math
 {
-float& Quat::operator[](uint8 i)
+float& Quat::operator[](int i)
 {
-  assert(i >= 0 && i < _length);
+  assert(i >= 0 && i < 4);
 	return (&x)[i];
 }
-const float& Quat::operator[](uint8 i) const
+const float& Quat::operator[](int i) const
 {
-  assert(i >= 0 && i < _length);
+  assert(i >= 0 && i < 4);
 	return (&x)[i];
 }
 
@@ -29,9 +30,8 @@ Quat::Quat(float w, float x, float y, float z) : x(x), y(y), z(z), w(w)
 /// Build a Quatternion from euler angles (pitch, yaw, roll), in radians.
 Quat::Quat(const Vec3& eulerAngle)
 {
-		Vec3 c = cos(eulerAngle * float(0.5));
-		Vec3 s = sin(eulerAngle * float(0.5));
-
+		Vec3 c = Vec3(cos(eulerAngle.x * float(0.5)), cos(eulerAngle.y * float(0.5)),cos(eulerAngle.z * float(0.5)));
+		Vec3 s = Vec3(sin(eulerAngle.x * float(0.5)), sin(eulerAngle.y * float(0.5)),sin(eulerAngle.z * float(0.5)));
 		this->w = c.x * c.y * c.z + s.x * s.y * s.z;
 		this->x = s.x * c.y * c.z - c.x * s.y * s.z;
 		this->y = c.x * s.y * c.z + s.x * c.y * s.z;

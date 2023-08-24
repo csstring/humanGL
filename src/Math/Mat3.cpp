@@ -1,17 +1,18 @@
 #include "math/Mat4.h"
 #include "math/Mat3.h"
-
+#include "math/Math.h"
+#include "Common.h"
 namespace math
 {
-  Vec3& Mat3::operator[](uint8 i)
+  Vec3& Mat3::operator[](int i)
   {
-    assert(i < _length);
+    assert(i < 3);
 		return this->_value[i];
   }
   
-  const Vec3& Mat3::operator[](uint8 i) const
+  const Vec3& Mat3::operator[](int i) const
   {
-    assert(i < _length);
+    assert(i < 3);
 		return this->_value[i];
   }
 
@@ -45,7 +46,6 @@ namespace math
     this->_value[0] = m[0];
 		this->_value[1] = m[1];
 		this->_value[2] = m[2];
-		this->_value[3] = m[3];
 		return *this;
   }
 
@@ -54,7 +54,6 @@ namespace math
     this->_value[0] += s;
 		this->_value[1] += s;
 		this->_value[2] += s;
-		this->_value[3] += s;
 		return *this;
   }
 
@@ -63,7 +62,6 @@ namespace math
     this->_value[0] += m[0];
 		this->_value[1] += m[1];
 		this->_value[2] += m[2];
-		this->_value[3] += m[3];
 		return *this;
   }
   Mat3& Mat3::operator-=(float s)
@@ -71,7 +69,6 @@ namespace math
     this->_value[0] -= s;
 		this->_value[1] -= s;
 		this->_value[2] -= s;
-		this->_value[3] -= s;
 		return *this;
   }
   Mat3& Mat3::operator-=(const Mat3& m)
@@ -79,7 +76,6 @@ namespace math
     this->_value[0] -= m[0];
 		this->_value[1] -= m[1];
 		this->_value[2] -= m[2];
-		this->_value[3] -= m[3];
 		return *this;
   }
   Mat3& Mat3::operator*=(float s)
@@ -87,7 +83,6 @@ namespace math
     this->_value[0] *= s;
 		this->_value[1] *= s;
 		this->_value[2] *= s;
-		this->_value[3] *= s;
 		return *this;
   }
   Mat3& Mat3::operator*=(const Mat3& m)
@@ -99,7 +94,6 @@ namespace math
     this->_value[0] /= s;
 		this->_value[1] /= s;
 		this->_value[2] /= s;
-		this->_value[3] /= s;
 		return *this;
   }
 

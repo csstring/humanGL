@@ -7,13 +7,13 @@
 #include "Bone.h"
 #include "IK/IKUtility.h"
 #include "Physx.h"
-//init HEAD, UPPERBACK
+#include "math/Math.h"
 
-glm::vec3 EyeIK::moveInBoneLocalPos(const glm::vec3& start, const glm::vec3& end, const glm::quat& toTargetDir, const glm::vec3& endBoneDir, float ratio)//비율
+math::Vec3 EyeIK::moveInBoneLocalPos(const math::Vec3& start, const math::Vec3& end, const math::Quat& toTargetDir, const math::Vec3& endBoneDir, float ratio)//비율
 {
     float distance = math::length(end - start);
-    glm::vec3 initialPos = start + endBoneDir * distance;
-    glm::vec3 targetPos = start + quatDivideRatio(toTargetDir, ratio) * endBoneDir * distance;
+    math::Vec3 initialPos = start + endBoneDir * distance;
+    math::Vec3 targetPos = start + quatDivideRatio(toTargetDir, ratio) * endBoneDir * distance;
     
     return (targetPos - initialPos); 
 }
@@ -40,22 +40,22 @@ void EyeIK::blendingRatioUpdate(const std::chrono::steady_clock::time_point& cur
 
 void EyeIK::solveIK(
     std::vector<BoneLocal>& _boneLocalVector, 
-    const glm::mat4& worldRotation, 
-    const glm::mat4& worldTranslate, 
+    const math::Mat4& worldRotation, 
+    const math::Mat4& worldTranslate, 
     const Controller& controller,
     const std::chrono::steady_clock::time_point& curTime,
     LowerState beforeState,
     Physx* gScene
 )
 {
-    std::vector<glm::vec3> inCharLocalPos;
-    std::vector<glm::mat4> inCharLocalRot;
+    std::vector<math::Vec3> inCharLocalPos;
+    std::vector<math::Mat4> inCharLocalRot;
 
     for (uint32 i : _boneIndexVec)
     {
-        glm::mat4 inCharTrans = controller.getMatrixInCharLocal(i, controller.getPlayer()->getCharacterSkeleton(), _boneLocalVector);
-        inCharLocalPos.push_back(inCharTrans * glm::vec4(0,0,0,1));
-        inCharLocalRot.push_back(glm::mat3(inCharTrans));
+        math::Mat4 inCharTrans = controller.getMatrixInCharLocal(i, controller.getPlayer()->getCharacterSkeleton(), _boneLocalVector);
+        inCharLocalPos.push_back(inCharTrans * math::Vec4(0,0,0,1));
+        inCharLocalRot.push_back(math::Mat3(inCharTrans));
     }
 
     if (_isFirst == true)
@@ -64,16 +64,16 @@ void EyeIK::solveIK(
         _prevTime = curTime;
     }
 
-    glm::mat4 charLocalToWorld = worldTranslate * worldRotation;
-    glm::vec3 targetPosInCharLocal = math::inverse(charLocalToWorld) * glm::vec4(_targetPosition, 1);
-    glm::vec3 middleEye = math::mix(*(inCharLocalPos.end()-2), *(inCharLocalPos.end()-1),0.8);
-    glm::vec3 targetDir = targetPosInCharLocal - middleEye;
-    glm::vec3 curSee = inCharLocalRot.back() * glm::vec4(math::cross(glm::vec3(1,0,0), _bonedirection.back()),1);
-    glm::quat afterSee = math::rotation(math::normalize(curSee), math::normalize(targetDir));
+    math::Mat4 charLocalToWorld = worldTranslate * worldRotation;
+    math::Vec3 targetPosInCharLocal = math::inverse(charLocalToWorld) * math::Vec4(_targetPosition, 1);
+    math::Vec3 middleEye = math::mix(*(inCharLocalPos.end()-2), *(inCharLocalPos.end()-1),0.8);
+    math::Vec3 targetDir = targetPosInCharLocal - middleEye;
+    math::Vec3 curSee = inCharLocalRot.back() * math::Vec4(math::cross(math::Vec3(1,0,0), _bonedirection.back()),1);
+    math::Quat afterSee = math::rotation(math::normalize(curSee), math::normalize(targetDir));
 
     for (uint32 i : _boneIndexVec)
     {
-        glm::quat rot;
+        math::Quat rot;
         if (i == BONEID::LOWERNECK)
             rot = quatDivideRatio(afterSee,LOWERNECK_RATIO) * _boneLocalVector[i].rotationInBoneLocal;
         else if (i == BONEID::UPPERNECK)
@@ -84,7 +84,7 @@ void EyeIK::solveIK(
             continue;
         if (limitAngleCheck(_boneVector[i], rot) == false)
         {
-            // glm::vec3 deg = quatToEulerDivideRatio(rot, 1) * (180.0f / PI);
+            // math::Vec3 deg = quatToEulerDivideRatio(rot, 1) * (180.0f / PI);
             // std::cout << glm::to_string(deg) << std::endl;
             _targetOn = false;
             break;
@@ -105,8 +105,8 @@ void EyeIK::solveIK(
             ratio = HEAD_RATIO;
         else if (_boneIndexVec[i] == BONEID::THORAX)
             continue;
-        glm::quat mixRot = quatDivideRatio(afterSee,ratio) * _boneLocalVector[_boneIndexVec[i]].rotationInBoneLocal;
-        glm::vec3 mixTranslate = _boneLocalVector[_boneIndexVec[i]].translationInBoneLocal + moveInBoneLocalPos(inCharLocalPos[i-1], inCharLocalPos[i], afterSee, _bonedirection[i], ratio);
+        math::Quat mixRot = quatDivideRatio(afterSee,ratio) * _boneLocalVector[_boneIndexVec[i]].rotationInBoneLocal;
+        math::Vec3 mixTranslate = _boneLocalVector[_boneIndexVec[i]].translationInBoneLocal + moveInBoneLocalPos(inCharLocalPos[i-1], inCharLocalPos[i], afterSee, _bonedirection[i], ratio);
         _boneLocalVector[_boneIndexVec[i]].rotationInBoneLocal = math::slerp(_boneLocalVector[_boneIndexVec[i]].rotationInBoneLocal, mixRot, _blendingRatio);
         _boneLocalVector[_boneIndexVec[i]].translationInBoneLocal = math::mix(_boneLocalVector[_boneIndexVec[i]].translationInBoneLocal, mixTranslate, _blendingRatio);
     }

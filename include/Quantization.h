@@ -12,5 +12,5 @@ struct quatPressData
 
 int32 toInt(float val);
 float toFloat(int16 val);
-quatPressData packQuaternionData(glm::quat quat);
-glm::quat unpackQuaternionData(quatPressData packData);
+quatPressData packQuaternionData(math::Quat quat);
+math::Quat unpackQuaternionData(quatPressData packData);

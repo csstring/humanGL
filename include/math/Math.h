@@ -1,12 +1,15 @@
 #pragma once
 #include <cmath>
-#include "GLM/glm.hpp"
-#include "GLM/gtx/string_cast.hpp"
+
 const float PI = 3.141592;
-class Mat3;
-class Mat4;
-class Vec3;
-class Vec4;
+namespace math
+{
+  class Mat3;
+  class Mat4;
+  class Vec3;
+  class Vec4;
+  class Quat;
+}
 namespace math
 {
   float radians(float degrees);
@@ -50,4 +53,7 @@ namespace math
 	Vec3 mix(const Vec3& x, const Vec3& y, const float& a);
 	float mix(const float& x, const float& y, const float& a);
 	Quat slerp(const Quat& x, const Quat& y, const float& a);
+
+  Mat4 perspective(float fovy, float aspect, float zNear, float zFar);
+  Mat4 lookAt(const Vec3& eye, const Vec3& center, const Vec3& up);
 }

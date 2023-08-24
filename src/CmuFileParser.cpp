@@ -5,6 +5,7 @@
 #include "GLM/gtx/transform.hpp"
 #include "EnumHeader.h"
 #include "fstream"
+#include "math/Math.h"
 
 bool CmuFileParser::loadCmuFile(void)
 {
@@ -91,7 +92,7 @@ bool CmuFileParser::parseAsfRoot(std::ifstream& ifs)
     bone._boneIndex = 0;
     bone._boneName = "root";
     bone._length = 0;
-    bone._direction = glm::vec3(0.0f);
+    bone._direction = math::Vec3(0.0f);
 
     std::string buffer;
     for (int i = 0; i < 4; ++i)
@@ -246,16 +247,16 @@ bool CmuFileParser::parseAsfHierarchy(std::ifstream& ifs)
         {
             Bone& bone = _skeleton->getBoneVector()[animationData->_boneIndex];
             bone._parentBoneIndex = -1;
-            glm::vec3 axis = bone._axis;
+            math::Vec3 axis = bone._axis;
             
-            glm::mat4 rotX = math::rotate(axis[0], glm::vec3(1.0f,0.0f,0.0f));
-            glm::mat4 rotY = math::rotate(axis[1], glm::vec3(0.0f,1.0f,0.0f));
-            glm::mat4 rotZ = math::rotate(axis[2], glm::vec3(0.0f,0.0f,1.0f));
+            math::Mat4 rotX = math::rotate(axis[0], math::Vec3(1.0f,0.0f,0.0f));
+            math::Mat4 rotY = math::rotate(axis[1], math::Vec3(0.0f,1.0f,0.0f));
+            math::Mat4 rotZ = math::rotate(axis[2], math::Vec3(0.0f,0.0f,1.0f));
 
-            glm::mat4 c = rotZ * rotY * rotX * glm::mat4(1.0f);
+            math::Mat4 c = rotZ * rotY * rotX * math::Mat4(1.0f);
             bone._c = math::quatCast(c);
             bone._invC = math::quatCast(math::inverse(c));
-            bone._b = glm::vec3(bone._postion.x, bone._postion.y, bone._postion.z);
+            bone._b = math::Vec3(bone._postion.x, bone._postion.y, bone._postion.z);
         }
 
         //other
@@ -266,18 +267,18 @@ bool CmuFileParser::parseAsfHierarchy(std::ifstream& ifs)
 
             Bone& bone = _skeleton->getBoneVector()[animationData->_childrens[i]._boneIndex];
             bone._parentBoneIndex = boneIndex;
-            glm::vec3 axis = bone._axis;
+            math::Vec3 axis = bone._axis;
 //mat4 fixme
-            glm::mat4 rotX = math::rotate(axis[0], glm::vec3(1.0f,0.0f,0.0f));
-            glm::mat4 rotY = math::rotate(axis[1], glm::vec3(0.0f,1.0f,0.0f));
-            glm::mat4 rotZ = math::rotate(axis[2], glm::vec3(0.0f,0.0f,1.0f));
+            math::Mat4 rotX = math::rotate(axis[0], math::Vec3(1.0f,0.0f,0.0f));
+            math::Mat4 rotY = math::rotate(axis[1], math::Vec3(0.0f,1.0f,0.0f));
+            math::Mat4 rotZ = math::rotate(axis[2], math::Vec3(0.0f,0.0f,1.0f));
 
-            glm::mat3 c = rotZ * rotY * rotX;
+            math::Mat3 c = rotZ * rotY * rotX;
             bone._c = math::quatCast(c);
             bone._invC = math::quatCast(math::inverse(c));
 
-            glm::vec3 dir = _skeleton->getGBL() * bone._length * bone._direction;
-            bone._b = glm::vec3(dir);
+            math::Vec3 dir = _skeleton->getGBL() * bone._length * bone._direction;
+            bone._b = math::Vec3(dir);
         }
     }
     return true;

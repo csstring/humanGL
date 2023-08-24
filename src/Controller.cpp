@@ -1,10 +1,10 @@
 #include "Controller.h"
 #include "Skeleton.h"
 #include "Character.h"
-#include "GLM/gtx/quaternion.hpp"
 #include "EnumHeader.h"
 #include "Animation.h"
 #include "AnimationBlend/IBlendNode.h"
+#include "math/Math.h"
 
 void Controller::initialize(void)
 {
@@ -18,8 +18,8 @@ void Controller::draw(void)
 
 void Controller::update(void)
 {
-    glm::mat4 inCharLocalPosition = getMatrixInCharLocal(BONEID::HEAD, _player->getCharacterSkeleton(), _player->getCharLocalVector());
-    _targetCharterCube._translate = _player->getCharacterWorldPosition() * inCharLocalPosition * math::translate(glm::mat4(1.0f), glm::vec3(0,0.7,0));
+    math::Mat4 inCharLocalPosition = getMatrixInCharLocal(BONEID::HEAD, _player->getCharacterSkeleton(), _player->getCharLocalVector());
+    _targetCharterCube._translate = _player->getCharacterWorldPosition() * inCharLocalPosition * math::translate(math::Mat4(1.0f), math::Vec3(0,0.7,0));
     _targetCharterCube.update();
 }
 
@@ -30,15 +30,15 @@ void Controller::setPlayer(Character* player)
     _player = player;
 }
 
-glm::mat4 Controller::getMatrixInCharLocal(uint32 boneindex,const Skeleton& _skeleton, const std::vector<BoneLocal>& _boneLocalVector) const
+math::Mat4 Controller::getMatrixInCharLocal(uint32 boneindex,const Skeleton& _skeleton, const std::vector<BoneLocal>& _boneLocalVector) const
 {
     const std::vector<Bone>& boneVector = _skeleton.getBoneVector();
-    glm::mat4 matrix(1.0f);
+    math::Mat4 matrix(1.0f);
     const Bone* bone = &boneVector[boneindex];
     while (true)
     {
-        glm::mat4 trans = math::translate(glm::mat4(1.0f), _boneLocalVector[bone->_boneIndex].translationInBoneLocal);
-        glm::quat rot = _boneLocalVector[bone->_boneIndex].rotationInBoneLocal;
+        math::Mat4 trans = math::translate(math::Mat4(1.0f), _boneLocalVector[bone->_boneIndex].translationInBoneLocal);
+        math::Quat rot = _boneLocalVector[bone->_boneIndex].rotationInBoneLocal;
         matrix = trans * math::toMat4(rot) * matrix;
         if (bone->_parentBoneIndex == -1)
             break;

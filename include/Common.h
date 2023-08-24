@@ -4,12 +4,14 @@
 #include <string>
 #include <vector>
 #include <chrono>
-#include "GLM/glm.hpp"
-#include "GLM/gtx/string_cast.hpp"
 #include "PxPhysicsAPI.h"
 #include <ostream>
 #include <cmath>
-#include "math/Math.h"
+#include "math/Mat3.h"
+#include "math/Mat4.h"
+#include "math/Quat.h"
+#include "math/Vec3.h"
+#include "math/Vec4.h"
 
 typedef signed char         int8;
 typedef signed short        int16;
@@ -21,7 +23,6 @@ typedef unsigned int        uint32;
 typedef unsigned long       uint64;        
 
 const float OVERLAPTIME = 200;
-
 class Noncopyable
 {
     public:
@@ -40,9 +41,9 @@ void ft_assert(const std::string& exec);
 
 //utility
 std::vector<std::string> ft_split(const std::string& str);
-glm::mat4 ft_rotate(glm::vec3 start, glm::vec3 end);
-glm::vec3 quatToEulerDivideRatio(const glm::quat& quat, float ratio);
-glm::quat quatDivideRatio(const glm::quat& quat, float ratio);
+math::Mat4 ft_rotate(math::Vec3 start, math::Vec3 end);
+math::Vec3 quatToEulerDivideRatio(const math::Quat& quat, float ratio);
+math::Quat quatDivideRatio(const math::Quat& quat, float ratio);
 
 inline std::chrono::steady_clock::time_point getCurTimePoint(void)
 {

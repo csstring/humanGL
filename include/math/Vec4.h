@@ -1,17 +1,18 @@
 #pragma once
-#include "Common.h"
-class Vec3;
+namespace math
+{
+	class Vec3;
+}
 namespace math
 {
 class Vec4
 {
-	private:
-		uint8 _length = 4;
 	public:
 		union { float x, r, s; };
 		union { float y, g, t; };
 		union { float z, b, p; };
 		union { float w, a, q; };
+		
   public:
     explicit Vec4(float x, float y, float z, float w);
     explicit Vec4(float scalar);
@@ -20,8 +21,8 @@ class Vec4
 		Vec4(float x, const Vec3& v);
 		Vec4(const Vec3& v, float w);
     ~Vec4(){};
-		float& operator[](uint8 i);
-		const float& operator[](uint8 i) const;
+		float& operator[](int i);
+		const float& operator[](int i) const;
 		Vec4& operator=(Vec4 const& v);
 		Vec4& operator+=(float scalar);
 		Vec4& operator+=(Vec4 const& v);

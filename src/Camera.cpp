@@ -1,8 +1,12 @@
 #include "Camera.h"
 #include "GLFW/glfw3.h"
+#include "math/Math.h"
+#include "GLM/ext.hpp"
+#include "GLM/glm.hpp"
+
 void Camera::update(void)
 {
-    _view = glm::lookAt(_cameraPos, _cameraPos+_cameraFront, _cameraUp);
+    _view = math::lookAt(_cameraPos, _cameraPos+_cameraFront, _cameraUp);
 }
 
 void Camera::initialize(void)
@@ -22,7 +26,7 @@ void Camera::ProcessMouseScroll(float yoffset)
 void Camera::updateCameraVectors()
 {
     // calculate the new Front vector
-    glm::vec3 front;
+    math::Vec3 front;
     front.x = cos(math::radians(_yaw)) * cos(math::radians(_pitch));
     front.y = sin(math::radians(_pitch));
     front.z = sin(math::radians(_yaw)) * cos(math::radians(_pitch));

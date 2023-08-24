@@ -9,7 +9,7 @@ const float HEAD_RATIO = 1 - LOWERNECK_RATIO - UPPER_RATIO;
 class EyeIK : public IKInterface
 {
     private:
-        glm::vec3 moveInBoneLocalPos(const glm::vec3& start, const glm::vec3& end, const glm::quat& toTargetDir, const glm::vec3& endBoneDir, float ratio);
+        math::Vec3 moveInBoneLocalPos(const math::Vec3& start, const math::Vec3& end, const math::Quat& toTargetDir, const math::Vec3& endBoneDir, float ratio);
         void blendingRatioUpdate(const std::chrono::steady_clock::time_point& curTime);
     
     public:
@@ -18,8 +18,8 @@ class EyeIK : public IKInterface
 
         virtual void solveIK(
             std::vector<BoneLocal>& _boneLocalVector, 
-            const glm::mat4& worldRotation, 
-            const glm::mat4& worldTranslate,
+            const math::Mat4& worldRotation, 
+            const math::Mat4& worldTranslate,
             const Controller& _controller,
             const std::chrono::steady_clock::time_point& curTime,
             LowerState beforeState = LowerState::IDLE,

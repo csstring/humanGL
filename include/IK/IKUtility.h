@@ -2,4 +2,4 @@
 #include "../Common.h"
 
 struct Bone;
-bool limitAngleCheck(const Bone& bone, const glm::quat& boneRot);
+bool limitAngleCheck(const Bone& bone, const math::Quat& boneRot);

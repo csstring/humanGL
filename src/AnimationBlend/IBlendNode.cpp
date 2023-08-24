@@ -1,14 +1,14 @@
 #include "AnimationBlend/IBlendNode.h"
 #include "BoneLocal.h"
-#include "GLM/gtx/spline.hpp"
+#include "math/Math.h"
 #include <queue>
 
-inline bool pairCompare(const std::pair<uint32, glm::quat>& a, const uint32& val)
+inline bool pairCompare(const std::pair<uint32, math::Quat>& a, const uint32& val)
 {
     return a.first < val;
 }
 
-void IBlendNode::getTransFormByKeyFrame(glm::quat& interpolR, glm::vec3& interpolT, const AnimationData* node, uint32 keyFrame)
+void IBlendNode::getTransFormByKeyFrame(math::Quat& interpolR, math::Vec3& interpolT, const AnimationData* node, uint32 keyFrame)
 {
     auto itR = std::lower_bound(node->_localRotation.begin(), node->_localRotation.end(), keyFrame, pairCompare);
     if (itR == node->_localRotation.end()) 
@@ -19,18 +19,18 @@ void IBlendNode::getTransFormByKeyFrame(glm::quat& interpolR, glm::vec3& interpo
     if (frontDistance < 3) itR = node->_localRotation.begin() + 3;
     if (keyFrame <= (itR -2)->first) keyFrame = (itR -2)->first + 1;
     else if (keyFrame > (itR - 1)->first) keyFrame = (itR - 1)->first;
-    const glm::quat& t0 = (itR - 3)->second;
-    const glm::quat& t1 = (itR - 2)->second;
-    const glm::quat& t2 = (itR - 1)->second;
-    const glm::quat& t3 = (itR - 0)->second;
+    const math::Quat& t0 = (itR - 3)->second;
+    const math::Quat& t1 = (itR - 2)->second;
+    const math::Quat& t2 = (itR - 1)->second;
+    const math::Quat& t3 = (itR - 0)->second;
     interpolR = math::catmullRom(t0,t1,t2,t3, (keyFrame - (itR -2)->first)/((itR-1)->first - (itR -2)->first));
 
     auto itT = std::lower_bound(node->_localTrans.begin(), node->_localTrans.end(), keyFrame, pairCompare);
     itT++;
-    const glm::vec3& v0 = (itT - 3)->second;
-    const glm::vec3& v1 = (itT - 2)->second;
-    const glm::vec3& v2 = (itT - 1)->second;
-    const glm::vec3& v3 = (itT - 0)->second;
+    const math::Vec3& v0 = (itT - 3)->second;
+    const math::Vec3& v1 = (itT - 2)->second;
+    const math::Vec3& v2 = (itT - 1)->second;
+    const math::Vec3& v3 = (itT - 0)->second;
     interpolT = math::catmullRom(v0,v1,v2,v3,(keyFrame - (itT -2)->first)/((itT-1)->first - (itT -2)->first));
 }
 
@@ -61,8 +61,8 @@ void IBlendNode::updateTransForm(
             }
             animationQ.push(&animation);
         }
-        glm::quat mixR;
-        glm::vec3 mixT;
+        math::Quat mixR;
+        math::Vec3 mixT;
         getTransFormByKeyFrame(mixR, mixT, curData, keyFrame);
         
         // if (nodeNum != BlendNode::UPPER || curData->_boneIndex != BONEID::ROOT)

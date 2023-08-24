@@ -1,28 +1,28 @@
 #pragma once
-#include "../Common.h"
+#include "Common.h"
 
 class Cube
 {
     private:
-        std::vector<glm::vec4> _buffer;
+        std::vector<math::Vec4> _buffer;
         uint32 _VAO, _VBO, _VCO;
         
     public:
-        std::vector<glm::vec4> _vertex;
-        glm::quat _rot;
-        glm::mat4 _translate;
-        glm::vec3 _position;
-        glm::vec3 _dimenstion;
-        glm::vec3 _color;
+        std::vector<math::Vec4> _vertex;
+        math::Quat _rot;
+        math::Mat4 _translate;
+        math::Vec3 _position;
+        math::Vec3 _dimenstion;
+        math::Vec3 _color;
 
     private:
-        std::vector<glm::vec4> CreateCubeVertices(const glm::vec3& dimensions, const glm::vec3& position);    
+        std::vector<math::Vec4> CreateCubeVertices(const math::Vec3& dimensions, const math::Vec3& position);    
     
     public:
-        Cube(glm::vec3 dimensions, glm::vec3 position, glm::vec3 color = glm::vec3(0,1,0)) : _dimenstion(dimensions), _position(position), _color(color)
+        Cube(math::Vec3 dimensions, math::Vec3 position, math::Vec3 color = math::Vec3(0,1,0)) : _dimenstion(dimensions), _position(position), _color(color)
         {
-            _rot = glm::quat(1.0f, glm::vec3(0.0f));
-            _translate = glm::mat4(1.0f);
+            _rot = math::Quat(1.0f, math::Vec3(0.0f));
+            _translate = math::Mat4(1.0f);
         };
         ~Cube(){};
         void initialize(void);

@@ -9,13 +9,13 @@ class Camera
         Camera() : _yaw(-90.0f), _pitch(0.0f), _movementSpeed(2.5f), _mouseSensitivity(0.1f), _zoom(45.0f), _isFirst(true)
         {
             //+z to -z
-            _cameraPos = glm::vec3(0,3,30);
-            _cameraUp = glm::vec3(0,1,0);
-            _cameraFront = glm::vec3(0,0,-1);
+            _cameraPos = math::Vec3(0,3,30);
+            _cameraUp = math::Vec3(0,1,0);
+            _cameraFront = math::Vec3(0,0,-1);
             //+x to -x
-            // _cameraPos = glm::vec3(30,3,30);
-            // _cameraUp = glm::vec3(0,1,0);
-            // _cameraFront = glm::vec3(0,0,-1);
+            // _cameraPos = math::Vec3(30,3,30);
+            // _cameraUp = math::Vec3(0,1,0);
+            // _cameraFront = math::Vec3(0,0,-1);
             updateCameraVectors();
         };
         ~Camera(){};
@@ -30,15 +30,15 @@ class Camera
         float _pitch;
         float _movementSpeed;
         float _mouseSensitivity;
-        glm::vec3   _cameraUp;
+        math::Vec3   _cameraUp;
     
     public:
         float _zoom;
         bool _isFirst;
         float _lastX;
         float _lastY;
-        glm::vec3   _cameraPos;
-        glm::vec3   _cameraFront;
-        glm::vec3   _cameraRight;
-        glm::mat4   _view;
+        math::Vec3   _cameraPos;
+        math::Vec3   _cameraFront;
+        math::Vec3   _cameraRight;
+        math::Mat4   _view;
 };  

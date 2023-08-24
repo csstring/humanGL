@@ -66,7 +66,7 @@ void Animation::AnimationDataTraver(AnimationTreeTraversal& travel)
 void Animation::findSameFrame(uint32 count)
 {
     std::queue<AnimationData* > dataQueue;
-    std::vector<glm::vec3> origin[31];
+    std::vector<math::Vec3> origin[31];
     std::vector<uint32> frameList;
     float errorRange = 0;
     int curCount = 0;

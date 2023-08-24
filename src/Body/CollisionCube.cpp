@@ -3,7 +3,7 @@
 #include "GL/glew.h"
 #include "EnumHeader.h"
 #include "Body/Cube.h"
-#include "GLM/gtx/quaternion.hpp"
+#include "math/Math.h"
 void CollisionCube::initialize(physx::PxPhysics* gPhysics, physx::PxScene* gScene)
 {
 
@@ -20,7 +20,7 @@ void CollisionCube::initialize(physx::PxPhysics* gPhysics, physx::PxScene* gScen
     gScene->addActor(*gCubeActor);
 }
 
-void CollisionCube::update(glm::quat quat)
+void CollisionCube::update(math::Quat quat)
 {
     // auto pos = gCubeActor->getGlobalPose();
     // physx::PxQuat currentRotation(pos.q.x, pos.q.y, pos.q.z, pos.q.w);
@@ -30,7 +30,7 @@ void CollisionCube::update(glm::quat quat)
     // gCubeActor->setGlobalPose(pos);
 
     _cube._rot = quat * _cube._rot;
-    _cube._translate = math::translate(glm::mat4(1.0f), _position);
+    _cube._translate = math::translate(math::Mat4(1.0f), _position);
     _cube.update();
 }
 

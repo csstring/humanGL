@@ -4,8 +4,6 @@
 #include "Animation.h"
 #include "GL/glew.h"
 #include "Body/Cylinder.h"
-#include "GLM/gtx/compatibility.hpp"
-#include "GLM/gtx/quaternion.hpp"
 #include "Controller.h"
 #include "IK/EyeIK.h"
 #include "IK/FootIK.h"
@@ -14,34 +12,35 @@
 #include "AnimationBlend/IBlendNode.h"
 #include "Body/Ground.h"
 #include "Body/CollisionCylinder.h"
+#include "math/Math.h"
 
 void Character::setTestLegIK(bool _isRight)
 {
-    glm::vec3 t, pos;
+    math::Vec3 t, pos;
     if (_isRight == true)
     {
-        t = _worldTrans * _worldRotation * _controller.getMatrixInCharLocal(BONEID::RFOOT, _skeleton, _boneLocalVector) * glm::vec4(0,0,0,1);
-        pos = {t.x + 3, t.y +4, 1};
+        t = _worldTrans * _worldRotation * _controller.getMatrixInCharLocal(BONEID::RFOOT, _skeleton, _boneLocalVector) * math::Vec4(0,0,0,1);
+        pos = math::Vec3(t.x + 3, t.y +4, 1);
     }
     if (_isRight == false)
     {
-        t = _worldTrans * _worldRotation * _controller.getMatrixInCharLocal(BONEID::LFOOT, _skeleton, _boneLocalVector) * glm::vec4(0,0,0,1);
-        pos = {t.x + 3, t.y +4, -1};
+        t = _worldTrans * _worldRotation * _controller.getMatrixInCharLocal(BONEID::LFOOT, _skeleton, _boneLocalVector) * math::Vec4(0,0,0,1);
+        pos = math::Vec3(t.x + 3, t.y +4, -1);
     }
 
     if (_RfootIK->_targetOn == false && _RfootIK->_blendingRatio == 0)
     {
-        _RfootIK->setTestOption(pos, glm::vec3(0,1,0), _worldTrans*_worldRotation);
+        _RfootIK->setTestOption(pos, math::Vec3(0,1,0), _worldTrans*_worldRotation);
         std::cout << "test call" << std::endl;
     }
 }
 
 void Character::rotationY(float radian)
 {
-    _worldRotation = math::rotate(_worldRotation, radian, glm::vec3(0,1,0));
+    _worldRotation = math::rotate(_worldRotation, radian, math::Vec3(0,1,0));
 }
 
-glm::mat4 Character::getCharacterWorldPosition(void) const
+math::Mat4 Character::getCharacterWorldPosition(void) const
 {
     return _worldTrans * _worldRotation;
 }
@@ -55,8 +54,8 @@ void Character::initialize(void)
     VBC.resize(size);
 
     _boneLocalVector.resize(size);
-    _worldTrans = glm::mat4(1.0f);
-    _worldRotation = glm::mat4(1.0f);
+    _worldTrans = math::Mat4(1.0f);
+    _worldRotation = math::Mat4(1.0f);
     boneBufferMaping();
 
     _blender.initialize();
@@ -96,17 +95,17 @@ void Character::boneBufferMaping(void)
 
 void Character::worldPositionUpdate(float deltaTime)
 {
-    glm::vec3 t = _worldTrans * _worldRotation * _controller.getMatrixInCharLocal(BONEID::RFOOT, _skeleton, _boneLocalVector) * glm::vec4(0,0,0,1);
-    glm::vec3 root = _worldTrans * _worldRotation * _controller.getMatrixInCharLocal(BONEID::ROOT, _skeleton, _boneLocalVector) * glm::vec4(0,0,0,1);
+    math::Vec3 t = _worldTrans * _worldRotation * _controller.getMatrixInCharLocal(BONEID::RFOOT, _skeleton, _boneLocalVector) * math::Vec4(0,0,0,1);
+    math::Vec3 root = _worldTrans * _worldRotation * _controller.getMatrixInCharLocal(BONEID::ROOT, _skeleton, _boneLocalVector) * math::Vec4(0,0,0,1);
 
     // if (t.y > _groundHight)//fix me lastcall
     //     root.y -= _yError * deltaTime;
     // else if (t.y < _groundHight)
     //     root.y += _yError * deltaTime;
-    _worldTrans = math::translate(glm::mat4(1.0f), root);
+    _worldTrans = math::translate(math::Mat4(1.0f), root);
 }
 
-void Character::update(const std::chrono::steady_clock::time_point& curTime, glm::vec3 eyeTarget, Physx* physx)
+void Character::update(const std::chrono::steady_clock::time_point& curTime, math::Vec3 eyeTarget, Physx* physx)
 {
     std::chrono::milliseconds delta;
     static int i = 0;
@@ -141,11 +140,11 @@ void Character::draw(void)
 {
     const std::vector<Bone>& boneVector = _skeleton.getBoneVector();
     // _collisionMesh->draw();
-    glm::vec3 color(0.9412, 0.7922, 0.2549);
+    math::Vec3 color(0.9412, 0.7922, 0.2549);
     for(const Bone& bone : boneVector)
     {
         glBindVertexArray(VAO[bone._boneIndex]);
-        glm::mat4 toParentDir = _worldTrans * _worldRotation * _controller.getMatrixInCharLocal(bone._boneIndex, _skeleton, _boneLocalVector) * ft_rotate(glm::vec3(0.0,0.0,1.0), -bone._direction);// * glm::inverse(test3);
+        math::Mat4 toParentDir = _worldTrans * _worldRotation * _controller.getMatrixInCharLocal(bone._boneIndex, _skeleton, _boneLocalVector) * ft_rotate(math::Vec3(0.0,0.0,1.0), -bone._direction);// * glm::inverse(test3);
         Cylinder cylinder(0.2, 1.0f *_skeleton.getGBL() * bone._length ,16, toParentDir);
         cylinder.initialize(color, VBC[bone._boneIndex], static_cast<BONEID>(bone._boneIndex));
         cylinder.render(VBO[bone._boneIndex]);

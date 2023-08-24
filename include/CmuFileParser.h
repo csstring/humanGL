@@ -5,7 +5,7 @@ class Skeleton;
 struct Bone;
 class Animation;
 
-static const char* asfPath = "/goinfre/schoe/humanGL/asf/02.asf";
+static const char* asfPath = "/Users/schoe/Desktop/humanGL/asf/02.asf";
 class CmuFileParser : Noncopyable
 {
     public : 

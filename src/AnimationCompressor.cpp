@@ -1,9 +1,8 @@
 #include "AnimationCompressor.h"
 #include "Animation.h"
-#include "GLM/gtx/spline.hpp"
 #include <queue>
 #include <algorithm>
-#include "GLM/ext.hpp"
+#include "math/Math.h"
 
 std::pair<float, int32> AnimationCompressor::findFramePoint(std::vector<uint32> frameList, uint32 index)
 {
@@ -16,7 +15,7 @@ std::pair<float, int32> AnimationCompressor::findFramePoint(std::vector<uint32> 
 
     for (float i = k2 + 1; i < k3; ++i)
     {
-        glm::quat point = math::catmullRom((it + k1)->second,(it + k2)->second,(it + k3)->second,(it + k4)->second, (i-k2) / (k3 - k2));
+        math::Quat point = math::catmullRom((it + k1)->second,(it + k2)->second,(it + k3)->second,(it + k4)->second, (i-k2) / (k3 - k2));
         float x = (it + i)->second.x - point.x;
         float y = (it + i)->second.y - point.y;
         float z = (it + i)->second.z - point.z;
@@ -71,8 +70,8 @@ void AnimationCompressor::getCompressKeyFrame(std::vector<uint32>& frameList)
 //data swap
 void AnimationCompressor::dataSwap(AnimationData* node, std::vector<uint32>& frameList)
 {
-    std::vector<std::pair<uint32,glm::quat>> R;
-    std::vector<std::pair<uint32,glm::vec3>> T;
+    std::vector<std::pair<uint32,math::Quat>> R;
+    std::vector<std::pair<uint32,math::Vec3>> T;
 
     R.reserve(frameList.size());
     T.reserve(frameList.size());

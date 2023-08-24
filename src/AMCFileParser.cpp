@@ -2,13 +2,10 @@
 #include "Skeleton.h"
 #include "Animation.h"
 #include "AnimationDataResize.h"
-#include "GLM/ext.hpp"
-#include "GLM/gtx/quaternion.hpp"
-#include "GLM/gtx/transform.hpp"
 #include "Quantization.h"
 #include "EnumHeader.h"
 #include "fstream"
-
+#include "math/Math.h"
 void AMCFileParser::boneDataindexing(std::vector<AnimationData*>& indexVector)
 {
     std::ifstream ifs(_filePath);
@@ -44,8 +41,8 @@ void AMCFileParser::dumyBoneInitialize(void)
     std::vector<uint32> frameList = {0, 1, _total-2, _total-1};
     for (uint32 i =0; i < _total; ++i)
     {
-        animationData1->_localRotation.push_back({i, glm::mat4(1.0f)});
-        animationData2->_localRotation.push_back({i, glm::mat4(1.0f)});
+        animationData1->_localRotation.push_back({i, math::Mat4(1.0f)});
+        animationData2->_localRotation.push_back({i, math::Mat4(1.0f)});
         animationData1->_localTrans.push_back({i, bone3._b});
         animationData2->_localTrans.push_back({i, bone4._b});
     }
@@ -88,9 +85,9 @@ bool AMCFileParser::loadAMCFile(void)
 
     uint32 animationTime = 0;
     uint32 moveBoneIndex = 0;
-    glm::vec3 firstTrans, beforeTrans;
-    glm::mat4 firstRot;
-    glm::vec3 total(0.0f);
+    math::Vec3 firstTrans, beforeTrans;
+    math::Mat4 firstRot;
+    math::Vec3 total(0.0f);
     while (ifs >> buffer)
     {
         
@@ -104,19 +101,19 @@ bool AMCFileParser::loadAMCFile(void)
         AnimationData* animationData = boneIndexVector[moveBoneIndex];
         Bone bone = _skeleton->getBoneVector()[animationData->_boneIndex];
 
-        glm::mat4 matrix(1.0f);
-        glm::vec3 localTransV(0.0f);
+        math::Mat4 matrix(1.0f);
+        math::Vec3 localTransV(0.0f);
         for (DOF dof : bone._dof)
         {
             float val;
             ifs >> val;
 
             if (dof == DOF::RX)
-                matrix = math::rotate(math::radians(val), glm::vec3(1.0f,0.0f,0.0f)) * matrix;   
+                matrix = math::rotate(math::radians(val), math::Vec3(1.0f,0.0f,0.0f)) * matrix;   
             else if (dof == DOF::RY)
-                matrix = math::rotate(math::radians(val), glm::vec3(0.0f,1.0f,0.0f)) * matrix; 
+                matrix = math::rotate(math::radians(val), math::Vec3(0.0f,1.0f,0.0f)) * matrix; 
             else if (dof == DOF::RZ)
-                matrix = math::rotate(math::radians(val), glm::vec3(0.0f,0.0f,1.0f)) * matrix; 
+                matrix = math::rotate(math::radians(val), math::Vec3(0.0f,0.0f,1.0f)) * matrix; 
             else if (dof == DOF::TX)
                 localTransV.x += val;
             else if (dof == DOF::TY)
@@ -130,31 +127,31 @@ bool AMCFileParser::loadAMCFile(void)
         }
         if (moveBoneIndex == 0)
         {
-            glm::vec3 tmp = localTransV;
+            math::Vec3 tmp = localTransV;
         
             localTransV -= firstTrans;
             total += localTransV;
             firstTrans = tmp;
             if (_animation->_name == "idle")
-                matrix = math::rotate(math::radians(90.0f), glm::vec3(0.0f,1.0f,0.0f)) * matrix;
+                matrix = math::rotate(math::radians(90.0f), math::Vec3(0.0f,1.0f,0.0f)) * matrix;
             else if (_animation->_name == "runJump2" || _animation -> _name == "roll")
             {
-                matrix = math::rotate(math::radians(180.0f), glm::vec3(0.0f,1.0f,0.0f)) * matrix;
-                localTransV = math::rotate(math::radians(180.0f), glm::vec3(0.0f,1.0f,0.0f)) * glm::vec4(localTransV,1);
+                matrix = math::rotate(math::radians(180.0f), math::Vec3(0.0f,1.0f,0.0f)) * matrix;
+                localTransV = math::rotate(math::radians(180.0f), math::Vec3(0.0f,1.0f,0.0f)) * math::Vec4(localTransV,1);
             }
             else if (_animation->_name == "punch")
             {
-                matrix = math::rotate(math::radians(90.0f), glm::vec3(0.0f,1.0f,0.0f)) * matrix;
+                matrix = math::rotate(math::radians(90.0f), math::Vec3(0.0f,1.0f,0.0f)) * matrix;
             }
             else if (_animation->_name == "golf")
             {
-                matrix = math::rotate(math::radians(-90.0f), glm::vec3(0.0f,1.0f,0.0f)) * matrix;
+                matrix = math::rotate(math::radians(-90.0f), math::Vec3(0.0f,1.0f,0.0f)) * matrix;
             }
         }
-        glm::quat localRot = bone._c * math::quatCast(matrix) * bone._invC;
+        math::Quat localRot = bone._c * math::quatCast(matrix) * bone._invC;
         animationData->_localRotation.push_back({animationTime, localRot});
 
-        glm::vec3 transV = math::toMat3(localRot) * bone._b + localTransV;
+        math::Vec3 transV = math::toMat3(localRot) * bone._b + localTransV;
         animationData->_localTrans.push_back({animationTime, transV});
 
         moveBoneIndex++;

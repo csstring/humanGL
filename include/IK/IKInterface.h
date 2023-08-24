@@ -13,8 +13,8 @@ class IKInterface
         // bool                     _targetOn;
         // float                    _blendingRatio;
         bool                     _isFirst;
-        glm::vec3                _targetPosition;
-        std::vector<glm::vec3>   _bonedirection;
+        math::Vec3                _targetPosition;
+        std::vector<math::Vec3>   _bonedirection;
         std::vector<uint8>       _boneIndexVec;
         float                    _velocity;
         uint32                   _retargetTime;
@@ -37,12 +37,12 @@ class IKInterface
         virtual ~IKInterface(){};
 
         void initialize(BONEID targetBone, BONEID startBone);
-        void setTargetPosition(glm::vec3 targetPosition);
-        void saveVelocity(glm::vec3 beforePos, glm::vec3 curPos);
+        void setTargetPosition(math::Vec3 targetPosition);
+        void saveVelocity(math::Vec3 beforePos, math::Vec3 curPos);
         virtual void solveIK(
             std::vector<BoneLocal>& _boneLocalVector, 
-            const glm::mat4& worldRotation, 
-            const glm::mat4& worldTranslate,
+            const math::Mat4& worldRotation, 
+            const math::Mat4& worldTranslate,
             const Controller& _controller,
             const std::chrono::steady_clock::time_point& curTime,
             LowerState beforeState,

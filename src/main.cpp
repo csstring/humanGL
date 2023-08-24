@@ -16,6 +16,7 @@
 #include <cmath>
 #include <iostream>
 #include <unistd.h>
+#include "math/Math.h"
 
 Camera      _camera;
 
@@ -52,10 +53,10 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 
 void fileLoad(Simulator& simulator)
 {//fixme path
-    std::vector<const char*> amcPathList = {"/goinfre/schoe/humanGL/amc/walk1.amc", 
-    "/goinfre/schoe/humanGL/amc/run.amc","/goinfre/schoe/humanGL/amc/runJump2.amc","/goinfre/schoe/humanGL/amc/punch.amc",
-    "/goinfre/schoe/humanGL/amc/idle.amc", "/goinfre/schoe/humanGL/amc/dance.amc", "/goinfre/schoe/humanGL/amc/drink.amc", 
-    "/goinfre/schoe/humanGL/amc/roll.amc", "/goinfre/schoe/humanGL/amc/golf.amc"};
+    std::vector<const char*> amcPathList = {"/Users/schoe/Desktop/humanGL/amc/walk1.amc", 
+    "/Users/schoe/Desktop/humanGL/amc/run.amc","/Users/schoe/Desktop/humanGL/amc/runJump2.amc","/Users/schoe/Desktop/humanGL/amc/punch.amc",
+    "/Users/schoe/Desktop/humanGL/amc/idle.amc", "/Users/schoe/Desktop/humanGL/amc/dance.amc", "/Users/schoe/Desktop/humanGL/amc/drink.amc", 
+    "/Users/schoe/Desktop/humanGL/amc/roll.amc", "/Users/schoe/Desktop/humanGL/amc/golf.amc"};
     simulator._animations.push_back(Animation("walk", 1));
     simulator._animations.push_back(Animation("run", 1));
     simulator._animations.push_back(Animation("runJump2", 1));
@@ -104,9 +105,51 @@ int main()
         
         shader.use();
         window.processInput(simulator, _camera);
-        glm::mat4 projection = glm::perspective(math::radians(_camera._zoom), (float)WINDOW_WITH / (float)WINDOW_HEIGHT, 0.1f, 500.0f);
+        math::Mat4 projection = math::perspective(math::radians(_camera._zoom), (float)WINDOW_WITH / (float)WINDOW_HEIGHT, 0.1f, 500.0f);
+        glm::mat4 pro = glm::perspective(math::radians(_camera._zoom), (float)WINDOW_WITH / (float)WINDOW_HEIGHT, 0.1f, 500.0f);
+        math::Mat4 transPose;
+        glm::mat4 transPro = glm::transpose(pro);
+        // {
+		// 	transPose[0][0] = projection[0][0];
+		// 	transPose[0][1] = projection[1][0];
+		// 	transPose[0][2] = projection[2][0];
+		// 	transPose[0][3] = projection[3][0];
+
+		// 	transPose[1][0] = projection[0][1];
+		// 	transPose[1][1] = projection[1][1];
+		// 	transPose[1][2] = projection[2][1];
+		// 	transPose[1][3] = projection[3][1];
+
+		// 	transPose[2][0] = projection[0][2];
+		// 	transPose[2][1] = projection[1][2];
+		// 	transPose[2][2] = projection[2][2];
+		// 	transPose[2][3] = projection[3][2];
+
+		// 	transPose[3][0] = projection[0][3];
+		// 	transPose[3][1] = projection[1][3];
+		// 	transPose[3][2] = projection[2][3];
+		// 	transPose[3][3] = projection[3][3];
+        // }
+        // {
+        //     std::cout << transPose[0][0] << " "<< transPro[0][0]<< std::endl;
+        //     std::cout << transPose[1][1] << " "<<transPro[1][1]<< std::endl; 
+        //     std::cout << transPose[2][2] << " "<<transPro[2][2]<<  std::endl; 
+        //     std::cout << transPose[2][3] << " "<<transPro[2][3]<<  std::endl; 
+        //     std::cout << transPose[3][2] << " "<<transPro[3][2] << std::endl; 
+        //     std::cout << transPose[0][1] << transPose[0][2] << transPose[0][3] << std::endl;
+        //     std::cout << transPose[1][0] << transPose[1][2] << transPose[1][3] << std::endl;
+        //     std::cout << transPose[2][0] << transPose[2][1] << std::endl;
+        //     std::cout << transPose[3][0] << transPose[3][1] << transPose[3][3] << std::endl;
+        //     std::cout << "math end" <<std::endl;
+        //     std::cout << transPro[0][1] << transPro[0][2] << transPro[0][3] << std::endl;
+        //     std::cout << transPro[1][0] << transPro[1][2] << transPro[1][3] << std::endl;
+        //     std::cout << transPro[2][0] << transPro[2][1] << std::endl;
+        //     std::cout << transPro[3][0] << transPro[3][1] << transPro[3][3] << std::endl;
+        //     std::cout << "glm end" <<std::endl;
+        // }
+
         _camera.update();
-        shader.setMat4("projection", projection);
+        shader.setMat4("projection", pro);
         shader.setMat4("view", _camera._view);
         simulator.update();
         simulator.draw();

@@ -1,9 +1,9 @@
 #include "Body/Cube.h"
 #include "GL/glew.h"
-#include "GLM/gtx/quaternion.hpp"
+#include "math/Math.h"
 void Cube::initialize(void)
 {
-    _vertex = CreateCubeVertices(_dimenstion, glm::vec3(0.0f));
+    _vertex = CreateCubeVertices(_dimenstion, math::Vec3(0.0f));
     glGenVertexArrays(1, &_VAO);
     glBindVertexArray(_VAO);
 
@@ -11,16 +11,16 @@ void Cube::initialize(void)
     glBindBuffer(GL_ARRAY_BUFFER, _VBO);
     glEnableVertexAttribArray(0);	
     glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, (void*)0);//size 열의 개수
-    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * _vertex.size(), _vertex.data(), GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(math::Vec4) * _vertex.size(), _vertex.data(), GL_DYNAMIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-    std::vector<glm::vec3> colors;
+    std::vector<math::Vec3> colors;
     colors.resize(_vertex.size(), _color);
     glGenBuffers(1, &_VCO);
     glBindBuffer(GL_ARRAY_BUFFER, _VCO);
     glEnableVertexAttribArray(1);	
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);//size 열의 개수
-    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * colors.size(), colors.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(math::Vec3) * colors.size(), colors.data(), GL_STATIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     
     glBindVertexArray(0);
@@ -39,28 +39,28 @@ void Cube::draw(void)
 {
     glBindVertexArray(_VAO);
     glBindBuffer(GL_ARRAY_BUFFER, _VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * _buffer.size(), _buffer.data(), GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(math::Vec4) * _buffer.size(), _buffer.data(), GL_DYNAMIC_DRAW);
     glDrawArrays(GL_TRIANGLES, 0, 36);
     glBindVertexArray(0);
 }
 
-std::vector<glm::vec4> Cube::CreateCubeVertices(const glm::vec3& dimensions, const glm::vec3& position) {
+std::vector<math::Vec4> Cube::CreateCubeVertices(const math::Vec3& dimensions, const math::Vec3& position) {
     float halfWidth = dimensions.x / 2.0f;
     float halfHeight = dimensions.y / 2.0f;
     float halfDepth = dimensions.z / 2.0f;
 
-    std::vector<glm::vec4> vertices;
+    std::vector<math::Vec4> vertices;
     vertices.reserve(36);
 
-    glm::vec4 cubeVertices[8] = {
-        {position.x - halfWidth, position.y - halfHeight, position.z - halfDepth, 1.0f},
-        {position.x - halfWidth, position.y - halfHeight, position.z + halfDepth, 1.0f},
-        {position.x - halfWidth, position.y + halfHeight, position.z + halfDepth, 1.0f},
-        {position.x - halfWidth, position.y + halfHeight, position.z - halfDepth, 1.0f},
-        {position.x + halfWidth, position.y - halfHeight, position.z - halfDepth, 1.0f},
-        {position.x + halfWidth, position.y - halfHeight, position.z + halfDepth, 1.0f},
-        {position.x + halfWidth, position.y + halfHeight, position.z + halfDepth, 1.0f},
-        {position.x + halfWidth, position.y + halfHeight, position.z - halfDepth, 1.0f}
+    math::Vec4 cubeVertices[8] = {
+        math::Vec4(position.x - halfWidth, position.y - halfHeight, position.z - halfDepth, 1.0f),
+        math::Vec4(position.x - halfWidth, position.y - halfHeight, position.z + halfDepth, 1.0f),
+        math::Vec4(position.x - halfWidth, position.y + halfHeight, position.z + halfDepth, 1.0f),
+        math::Vec4(position.x - halfWidth, position.y + halfHeight, position.z - halfDepth, 1.0f),
+        math::Vec4(position.x + halfWidth, position.y - halfHeight, position.z - halfDepth, 1.0f),
+        math::Vec4(position.x + halfWidth, position.y - halfHeight, position.z + halfDepth, 1.0f),
+        math::Vec4(position.x + halfWidth, position.y + halfHeight, position.z + halfDepth, 1.0f),
+        math::Vec4(position.x + halfWidth, position.y + halfHeight, position.z - halfDepth, 1.0f)
     };
 
     int indices[] = {

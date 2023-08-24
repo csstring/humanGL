@@ -21,7 +21,7 @@ void CollisionCylinder::initialize(physx::PxPhysics* gPhysics, physx::PxScene* g
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     
     glBindVertexArray(0);
-    _cylinder.initialize(glm::vec3(0,1,0), _VCO, BONEID::THORAX);
+    _cylinder.initialize(math::Vec3(0,1,0), _VCO, BONEID::THORAX);
 
     physx::PxMaterial* material = gPhysics->createMaterial(0.5f, 0.5f, 0.6f);
     // Create capsule geometry
@@ -38,16 +38,16 @@ void CollisionCylinder::initialize(physx::PxPhysics* gPhysics, physx::PxScene* g
     gScene->addActor(*gCylinderActor);
 }
 //collision update fix me
-// void Physx::UpdateCylinderPosition(const glm::vec3& position) 
+// void Physx::UpdateCylinderPosition(const math::Vec3& position) 
 // {
 //     gCylinderActor->setGlobalPose(PxTransform(position.x, position.y, position.z));
 // }
-void CollisionCylinder::update(glm::mat4 translate)
+void CollisionCylinder::update(math::Mat4 translate)
 {
-    glm::vec3 pos = translate * glm::vec4(0,0,0,1);
+    math::Vec3 pos = translate * math::Vec4(0,0,0,1);
     gCylinderActor->setGlobalPose(physx::PxTransform(pos.x, pos.y, pos.z));
     auto copy = gCylinderActor->getGlobalPose().p;
-    glm::vec3 copy1 = {copy.x, copy.y, copy.z};
+    math::Vec3 copy1 = math::Vec3(copy.x, copy.y, copy.z);
     // std::cout << "collision mesh pos : "<< glm::to_string(copy1) << std::endl;
     for (uint32 i = 0; i < _cylinder._buffer.size(); ++i)
     {
@@ -59,7 +59,7 @@ void CollisionCylinder::draw(void)
 {
     glBindVertexArray(_VAO);
     glBindBuffer(GL_ARRAY_BUFFER, _VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * _cylinder._buffer.size(), _cylinder._buffer.data(), GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(math::Vec4) * _cylinder._buffer.size(), _cylinder._buffer.data(), GL_DYNAMIC_DRAW);
     glDrawArrays(GL_LINES, 0, _cylinder._numVerticesSide);
     glDrawArrays(GL_LINE_LOOP, _cylinder._numVerticesSide+1, _cylinder._numVerticesTopBottom-1);
     glDrawArrays(GL_LINE_LOOP, _cylinder._numVerticesSide + _cylinder._numVerticesTopBottom+1, _cylinder._numVerticesTopBottom-1);

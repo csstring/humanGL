@@ -8,8 +8,8 @@ class AnimationTreeTraversal;
 
 struct AnimationData
 {
-        std::vector<std::pair<uint32,glm::quat>>     _localRotation;
-        std::vector<std::pair<uint32,glm::vec3>>     _localTrans;
+        std::vector<std::pair<uint32,math::Quat>>     _localRotation;
+        std::vector<std::pair<uint32,math::Vec3>>     _localTrans;
 
         int32                                       _boneIndex;
         std::vector<AnimationData>                  _childrens;

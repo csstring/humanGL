@@ -27,6 +27,6 @@ class AMCFileParser : Noncopyable
         Skeleton*         _skeleton;
         Animation*        _animation;
         uint32            _total;
-        glm::mat4         _rotToXY;
+        math::Mat4         _rotToXY;
         float             _tane;
 };

@@ -7,15 +7,15 @@
 #include "GLM/gtx/quaternion.hpp"
 #include "GLM/gtx/transform.hpp"
 #include "Body/CollisionCylinder.h"
-// #include "GLM/gtc/quaternion.hpp"
+#include "math/Math.h"
 // const float compressMul[] = {0 ,10.5, 94.6615, 355.184};
 void Simulator::addPlayer(const std::string initAnimationName)//position, name 같은거 추가하면 될듯
 {
     float radius = _skeleton.getSkeletonWidth();
     float height = _skeleton.getSkeletonHeight();
-    glm::vec3 rFoot = _skeleton.getCharLocalPosition(BONEID::RFOOT) - _skeleton.getCharLocalPosition(BONEID::ROOT);
+    math::Vec3 rFoot = _skeleton.getCharLocalPosition(BONEID::RFOOT) - _skeleton.getCharLocalPosition(BONEID::ROOT);
     //fix me
-    // CollisionCylinder* collisionMesh = _factory.makeCollisionCylinder(_physx.gScene, _physx.gPhysics, 1000, 1000, glm::vec3(0,rFoot.y,0));
+    // CollisionCylinder* collisionMesh = _factory.makeCollisionCylinder(_physx.gScene, _physx.gPhysics, 1000, 1000, math::Vec3(0,rFoot.y,0));
     CollisionCylinder* collisionMesh = nullptr;
     Character* newPlayer = _factory.makeCharacter(_skeleton, _controller, collisionMesh);
     Character* oldPlayer = _controller.getPlayer();
@@ -32,8 +32,8 @@ void Simulator::initialize(void)
     addPlayer("idle");
     _controller.initialize();
 
-    glm::quat rot = math::angleAxis(math::radians(10.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-    _cube = new CollisionCube({0.001,0.001,0.001}, {0,-10.5,0}, rot);
+    math::Quat rot = math::angleAxis(math::radians(10.0f), math::Vec3(0.0f, 0.0f, 1.0f));
+    _cube = new CollisionCube(math::Vec3(0.001,0.001,0.001), math::Vec3(0,-10.5,0), rot);
     _cube->initialize(_physx.gPhysics, _physx.gScene);
 
     _ground.initialize();
@@ -67,7 +67,7 @@ void Simulator::update(void)
         delta = 1.0f/60.0f;
     }
     float radian = PI * delta * 0.25f;
-    glm::quat groundCubeRot = math::angleAxis(radian, glm::vec3(0,1,0));
+    math::Quat groundCubeRot = math::angleAxis(radian, math::Vec3(0,1,0));
     _cube->update(groundCubeRot);
     _controller.update();
     _scene.update();
@@ -87,20 +87,20 @@ void Simulator::changeControllCharacter(void)
 {
     const Character* curPlayer = _controller.getPlayer();
     float minRad = 5; 
-    glm::mat4 inCharLocalPosition = _controller.getMatrixInCharLocal(BONEID::THORAX, curPlayer->getCharacterSkeleton(), curPlayer->getCharLocalVector());
-    glm::mat4 tmpRot = (glm::mat3)inCharLocalPosition;
-    glm::mat4 worRot = (glm::mat3)curPlayer->getCharacterWorldPosition();
-    glm::vec3 curSee,curPos;
-    curPos = curPlayer->getCharacterWorldPosition() * inCharLocalPosition * glm::vec4(0,0,0,1);
-    curSee = worRot * tmpRot * glm::vec4(math::cross(glm::vec3(1,0,0), curPlayer->getCharacterSkeleton().getBoneVector()[BONEID::THORAX]._direction),1);
+    math::Mat4 inCharLocalPosition = _controller.getMatrixInCharLocal(BONEID::THORAX, curPlayer->getCharacterSkeleton(), curPlayer->getCharLocalVector());
+    math::Mat4 tmpRot = (math::Mat3)inCharLocalPosition;
+    math::Mat4 worRot = (math::Mat3)curPlayer->getCharacterWorldPosition();
+    math::Vec3 curSee,curPos;
+    curPos = curPlayer->getCharacterWorldPosition() * inCharLocalPosition * math::Vec4(0,0,0,1);
+    curSee = worRot * tmpRot * math::Vec4(math::cross(math::Vec3(1,0,0), curPlayer->getCharacterSkeleton().getBoneVector()[BONEID::THORAX]._direction),1);
     for (Character* player : _players)
     {
         if (player == curPlayer)
             continue;
         inCharLocalPosition = _controller.getMatrixInCharLocal(BONEID::THORAX, player->getCharacterSkeleton(), player->getCharLocalVector());
-        glm::vec3 nextPos = player->getCharacterWorldPosition() * inCharLocalPosition * glm::vec4(0,0,0,1);
-        glm::vec3 nextEeler = math::normalize(nextPos - curPos);
-        glm::quat quat = math::rotation(curSee, nextEeler);
+        math::Vec3 nextPos = player->getCharacterWorldPosition() * inCharLocalPosition * math::Vec4(0,0,0,1);
+        math::Vec3 nextEeler = math::normalize(nextPos - curPos);
+        math::Quat quat = math::rotation(curSee, nextEeler);
         float rad = abs(math::angle(quat));
 
         if (rad < minRad)
@@ -114,25 +114,25 @@ void Simulator::changeControllCharacter(void)
 void Simulator::changeAnimation(KeyInput key)
 {
     // if (key == KeyInput::CUBEBACK)
-    //     _cube._pos = glm::translate(_cube._pos, glm::vec3(0,0,0.1));
+    //     _cube._pos = glm::translate(_cube._pos, math::Vec3(0,0,0.1));
     // else if (key == KeyInput::CUBEFRONT)
-    //     _cube._pos = glm::translate(_cube._pos, glm::vec3(0,0,-0.1));
+    //     _cube._pos = glm::translate(_cube._pos, math::Vec3(0,0,-0.1));
     // else if (key == KeyInput::CUBERIGHT)
-    //     _cube._pos = glm::translate(_cube._pos, glm::vec3(0.1,0,0));
+    //     _cube._pos = glm::translate(_cube._pos, math::Vec3(0.1,0,0));
     // else if (key == KeyInput::CUBELEFT)
-    //     _cube._pos = glm::translate(_cube._pos, glm::vec3(-0.1,0,0));
+    //     _cube._pos = glm::translate(_cube._pos, math::Vec3(-0.1,0,0));
     if (key == KeyInput::CUBEUP)
-        _ground._rot = math::translate(_ground._rot, glm::vec3(0,0.1,0));
+        _ground._rot = math::translate(_ground._rot, math::Vec3(0,0.1,0));
     else if (key == KeyInput::CUBEDOWN)
-        _ground._rot = math::translate(_ground._rot, glm::vec3(0,-0.1,0));
+        _ground._rot = math::translate(_ground._rot, math::Vec3(0,-0.1,0));
     else if (key == KeyInput::CUBEBACK)//j
-        _ground._rot = _ground._rot * math::rotate(math::radians(1.0f), glm::vec3(-1,0,0));
+        _ground._rot = _ground._rot * math::rotate(math::radians(1.0f), math::Vec3(-1,0,0));
     else if (key == KeyInput::CUBEFRONT)//u
-        _ground._rot = _ground._rot * math::rotate(math::radians(1.0f), glm::vec3(1,0,0));
+        _ground._rot = _ground._rot * math::rotate(math::radians(1.0f), math::Vec3(1,0,0));
     else if (key == KeyInput::CUBERIGHT)//k
-        _ground._rot = _ground._rot * math::rotate(math::radians(1.0f), glm::vec3(0,0,1));
+        _ground._rot = _ground._rot * math::rotate(math::radians(1.0f), math::Vec3(0,0,1));
     else if (key == KeyInput::CUBELEFT)//h
-        _ground._rot = _ground._rot * math::rotate(math::radians(1.0f), glm::vec3(0,0,-1));
+        _ground._rot = _ground._rot * math::rotate(math::radians(1.0f), math::Vec3(0,0,-1));
     else
         _controller.controllPlayer(key, _animations);
 }

@@ -1,19 +1,16 @@
 #pragma once
-#include "../Common.h"
-#include "../GLM/glm.hpp"
-#include <vector>
-
+#include "Common.h"
 class Line
 {
     public:
         float     _length;
-        glm::mat4 _transForm;
-        std::vector<glm::vec4> _vertices;
+        math::Mat4 _transForm;
+        std::vector<math::Vec4> _vertices;
 
     public:
-        Line(float length, glm::mat4 transForm) :_length(length), _transForm(transForm){};
+        Line(float length, math::Mat4 transForm) :_length(length), _transForm(transForm){};
         ~Line(){};
-        void initialize(glm::vec3 color, uint32 VBC);
+        void initialize(math::Vec3 color, uint32 VBC);
         void render(uint32 VBO) const;
     private:
 };

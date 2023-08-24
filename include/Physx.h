@@ -20,5 +20,5 @@ class Physx : Noncopyable
             gFoundation->release();
         };
         void Initialize(void);
-        bool sweepTestUseSphere(float maxDistance,float radius, glm::vec3 initPose, glm::vec3 direction, physx::PxSweepBuffer &hit);
+        bool sweepTestUseSphere(float maxDistance,float radius, math::Vec3 initPose, math::Vec3 direction, physx::PxSweepBuffer &hit);
 };

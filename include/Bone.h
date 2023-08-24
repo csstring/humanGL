@@ -13,14 +13,14 @@ struct Bone
     int32            _parentBoneIndex;
     std::string      _boneName;
     float            _length;
-    glm::vec3        _direction;
+    math::Vec3        _direction;
     std::vector<std::tuple<DOF, float,float>> _limits;
     //fixme : 아래쪽 데이터 필요없어서 정리 해야함
-    glm::vec3        _postion;
-    glm::vec3        _axis;
+    math::Vec3        _postion;
+    math::Vec3        _axis;
     std::vector<DOF> _dof;
-    glm::quat        _c;
-    glm::quat        _invC;
-    glm::vec3        _b;
+    math::Quat        _c;
+    math::Quat        _invC;
+    math::Vec3        _b;
 };
 

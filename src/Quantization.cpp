@@ -15,7 +15,7 @@ float toFloat(int16 val)
     return returnVal / (1 << 14);
 }
 
-quatPressData packQuaternionData(glm::quat quat)
+quatPressData packQuaternionData(math::Quat quat)
 {
     quatPressData pressData;
     uint32 find = 0;
@@ -53,9 +53,9 @@ quatPressData packQuaternionData(glm::quat quat)
     return pressData;
 }
 
-glm::quat unpackQuaternionData(quatPressData packData)
+math::Quat unpackQuaternionData(quatPressData packData)
 {
-    glm::quat quat;
+    math::Quat quat;
     uint32 find = packData.other;
 
     uint32 count = 0;

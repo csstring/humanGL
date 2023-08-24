@@ -3,7 +3,7 @@ CXX = c++
 #CXXFLAGS = -Wall -Wextra -Werror
 CXXFLAGS = -std=c++17
 # 링크 플래그
-LDFLAGS =
+LDFLAGS = 
 # 소스코드 파일 경로
 SRC_DIR = ./src
 # 오브젝트 파일 경로

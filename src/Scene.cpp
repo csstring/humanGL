@@ -1,6 +1,6 @@
 #include "Scene.h"
 #include <random>
-#include "GLM/gtc/random.hpp"
+
 void Scene::draw(void)
 {
     for(CollisionCube& cube: _objects)
@@ -20,10 +20,10 @@ void Scene::update(void)
 
 void Scene::initialize(physx::PxPhysics* gPhysics, physx::PxScene* gScene)
 {
-    glm::vec3 pos1(0.0f,-10.0f, 0.0f);
-    glm::vec3 pos2(0.0f,-10.0f, 0.0f);
-    glm::vec3 dimension1(5.0f, 0.2f,24.0f);
-    glm::vec3 dimension2(10.0f, 0.2f,24.0f);
+    math::Vec3 pos1(0.0f,-10.0f, 0.0f);
+    math::Vec3 pos2(0.0f,-10.0f, 0.0f);
+    math::Vec3 dimension1(5.0f, 0.2f,24.0f);
+    math::Vec3 dimension2(10.0f, 0.2f,24.0f);
     std::srand(static_cast<unsigned int>(std::time(nullptr)));
     for (int i=0; i <30; ++i)
     {
@@ -45,9 +45,9 @@ void Scene::initialize(physx::PxPhysics* gPhysics, physx::PxScene* gScene)
             pos2.z = 0;
         _objects.push_back(CollisionCube(dimension2, pos2));
     }
-    // glm::quat rot = glm::angleAxis(glm::radians(12.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+    // math::Quat rot = glm::angleAxis(glm::radians(12.0f), math::Vec3(0.0f, 0.0f, 1.0f));
     // _objects.push_back(CollisionCube({60,0.1,30}, {-30,0,-20}, rot));
-    // rot = glm::angleAxis(glm::radians(-12.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+    // rot = glm::angleAxis(glm::radians(-12.0f), math::Vec3(0.0f, 0.0f, 1.0f));
     // _objects.push_back(CollisionCube({60,0.1,30}, {30,0,-20}, rot));
 
     for(CollisionCube& cube: _objects)

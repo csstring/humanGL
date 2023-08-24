@@ -22,7 +22,7 @@ class IBlendNode
         };
         virtual ~IBlendNode(){};
 
-        void getTransFormByKeyFrame(glm::quat& interpolR, glm::vec3& interpolT, const AnimationData* node, uint32 keyFrame);
+        void getTransFormByKeyFrame(math::Quat& interpolR, math::Vec3& interpolT, const AnimationData* node, uint32 keyFrame);
         void updateTransForm(const AnimationData& node, uint32 keyFrame, float interpolVal, std::vector<BoneLocal>& _boneLocalVector, std::vector<BONEID> boneIds, BlendNode nodeNum);
         void changeUpperState(UpperState& upperState, const std::string& name);
         void changeLowerState(LowerState& loswerState, const std::string& name);

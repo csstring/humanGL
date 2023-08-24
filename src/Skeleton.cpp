@@ -1,9 +1,9 @@
 #include "Skeleton.h"
-#include "GLM/gtx/quaternion.hpp"
+#include "math/Math.h"
 /*
-glm::quat localRot = bone._c * glm::quat_cast(matrix) * bone._invC;
+math::Quat localRot = bone._c * math::Quat_cast(matrix) * bone._invC;
 animationData->_localRotation.push_back({animationTime, localRot});
-glm::vec3 transV = glm::toMat3(localRot) * bone._b + localTransV;
+math::Vec3 transV = glm::toMat3(localRot) * bone._b + localTransV;
 */
 int32 Skeleton::findBoneIndex(const std::string& name) const
 {
@@ -15,36 +15,36 @@ int32 Skeleton::findBoneIndex(const std::string& name) const
     return -1;
 }
 
-glm::vec3 Skeleton::getCharLocalPosition(BONEID boneID)
+math::Vec3 Skeleton::getCharLocalPosition(BONEID boneID)
 {
-    glm::mat4 matrix(1.0f);
+    math::Mat4 matrix(1.0f);
     const Bone* bone = &_boneVector[boneID];
     while (true)
     {   
-        glm::quat localRot = bone->_c * math::quatCast(matrix) * bone->_invC;
-        glm::vec3 transV = math::toMat3(localRot) * bone->_b;
-        glm::mat4 trans = math::translate(glm::mat4(1.0f), transV);
+        math::Quat localRot = bone->_c * math::quatCast(matrix) * bone->_invC;
+        math::Vec3 transV = math::toMat3(localRot) * bone->_b;
+        math::Mat4 trans = math::translate(math::Mat4(1.0f), transV);
 
         matrix = trans * math::toMat4(localRot) * matrix;
         if (bone->_parentBoneIndex == -1)
             break;
         bone = &_boneVector[bone->_parentBoneIndex];
     }
-    return matrix * glm::vec4(0,0,0,1);
+    return matrix * math::Vec4(0,0,0,1);
 }
 
 float Skeleton::getSkeletonHeight(void)
 {
-    glm::vec3 headPos = getCharLocalPosition(BONEID::HEAD);
-    glm::vec3 rfootPos = getCharLocalPosition(BONEID::RFOOT);
+    math::Vec3 headPos = getCharLocalPosition(BONEID::HEAD);
+    math::Vec3 rfootPos = getCharLocalPosition(BONEID::RFOOT);
 
     return (headPos.y - rfootPos.y);
 }
 
 float Skeleton::getSkeletonWidth(void)
 {
-    glm::vec3 rightHandPos = getCharLocalPosition(BONEID::RCLAVICLE);
-    glm::vec3 leftHandPos = getCharLocalPosition(BONEID::LCLAVICLE);
+    math::Vec3 rightHandPos = getCharLocalPosition(BONEID::RCLAVICLE);
+    math::Vec3 leftHandPos = getCharLocalPosition(BONEID::LCLAVICLE);
 
     return math::length(rightHandPos - leftHandPos);
 }

@@ -20,5 +20,5 @@ class AnimationCompressor
     
     private:
         float _errorRange;
-        std::vector<std::pair<uint32,glm::quat>>* _KeyFrameData;
+        std::vector<std::pair<uint32,math::Quat>>* _KeyFrameData;
 };

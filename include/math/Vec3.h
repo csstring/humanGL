@@ -1,12 +1,12 @@
 #pragma once
-#include "Common.h"
-class Vec4;
+namespace math
+{
+	class Vec4;
+}
 namespace math
 {
 class Vec3
 {
-	private:
-		uint8 _length = 3;
 	public:
 		union { float x, r, s; };
 		union { float y, g, t; };
@@ -19,8 +19,8 @@ class Vec3
 		Vec3(const Vec4& v);
 		Vec3();
     ~Vec3(){};
-		float& operator[](uint8 i);
-		const float& operator[](uint8 i) const;
+		float& operator[](int i);
+		const float& operator[](int i) const;
 		Vec3& operator=(Vec3 const& v);
 		Vec3& operator+=(float scalar);
 		Vec3& operator+=(Vec3 const& v);

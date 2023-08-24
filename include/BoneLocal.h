@@ -2,7 +2,7 @@
 #include "Common.h"
 struct BoneLocal
 {
-    glm::quat rotationInBoneLocal;
-    glm::vec3 translationInBoneLocal;
-    glm::vec3 scaleInBoneLocal;
+    math::Quat rotationInBoneLocal;
+    math::Vec3 translationInBoneLocal;
+    math::Vec3 scaleInBoneLocal;
 };

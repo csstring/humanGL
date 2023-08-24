@@ -1,23 +1,23 @@
 #pragma once
-#include "Common.h"
-class Mat3;
-class Mat4;
-class Vec3;
-class Vec4;
+namespace math
+{
+  class Mat3;
+  class Mat4;
+  class Vec3;
+  class Vec4;
+}
 
 namespace math
 {
   class Quat
   {
-    private:
-      uint8 _length = 4;
     
     public:
       float x, y, z, w;
     
     public:
-      float& operator[](uint8 i);
-		  const float& operator[](uint8 i) const;
+      float& operator[](int i);
+		  const float& operator[](int i) const;
 
 		Quat();
 		Quat(const Quat& q);
