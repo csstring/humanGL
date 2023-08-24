@@ -149,7 +149,7 @@ int main()
         // }
 
         _camera.update();
-        shader.setMat4("projection", pro);
+        shader.setMat4("projection", projection);
         shader.setMat4("view", _camera._view);
         simulator.update();
         simulator.draw();

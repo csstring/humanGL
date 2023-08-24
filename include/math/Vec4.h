@@ -8,10 +8,10 @@ namespace math
 class Vec4
 {
 	public:
-		union { float x, r, s; };
-		union { float y, g, t; };
-		union { float z, b, p; };
-		union { float w, a, q; };
+		float x;
+		float y;
+		float z;
+		float w;
 		
   public:
     explicit Vec4(float x, float y, float z, float w);

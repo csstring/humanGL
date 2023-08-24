@@ -8,9 +8,9 @@ namespace math
 class Vec3
 {
 	public:
-		union { float x, r, s; };
-		union { float y, g, t; };
-		union { float z, b, p; };
+		float x;
+		float y;
+		float z;
 
   public:
     explicit Vec3(float x, float y, float z);
