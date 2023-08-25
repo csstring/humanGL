@@ -88,17 +88,18 @@ void Simulator::changeControllCharacter(void)
     const Character* curPlayer = _controller.getPlayer();
     float minRad = 5; 
     math::Mat4 inCharLocalPosition = _controller.getMatrixInCharLocal(BONEID::THORAX, curPlayer->getCharacterSkeleton(), curPlayer->getCharLocalVector());
-    math::Mat4 tmpRot = (math::Mat3)inCharLocalPosition;
-    math::Mat4 worRot = (math::Mat3)curPlayer->getCharacterWorldPosition();
+    math::Mat3 tmpRot = math::Mat3(inCharLocalPosition);
+    math::Mat3 worRot = math::Mat3(curPlayer->getCharacterWorldPosition());
+    
     math::Vec3 curSee,curPos;
     curPos = curPlayer->getCharacterWorldPosition() * inCharLocalPosition * math::Vec4(0,0,0,1);
-    curSee = worRot * tmpRot * math::Vec4(math::cross(math::Vec3(1,0,0), curPlayer->getCharacterSkeleton().getBoneVector()[BONEID::THORAX]._direction),1);
+    curSee = worRot * tmpRot * math::cross(math::Vec3(1,0,0), curPlayer->getCharacterSkeleton().getBoneVector()[BONEID::THORAX]._direction);
     for (Character* player : _players)
     {
         if (player == curPlayer)
             continue;
         inCharLocalPosition = _controller.getMatrixInCharLocal(BONEID::THORAX, player->getCharacterSkeleton(), player->getCharLocalVector());
-        math::Vec3 nextPos = player->getCharacterWorldPosition() * inCharLocalPosition * math::Vec4(0,0,0,1);
+        math::Vec3 nextPos = math::Vec3(player->getCharacterWorldPosition() * inCharLocalPosition * math::Vec4(0,0,0,1));
         math::Vec3 nextEeler = math::normalize(nextPos - curPos);
         math::Quat quat = math::rotation(curSee, nextEeler);
         float rad = abs(math::angle(quat));

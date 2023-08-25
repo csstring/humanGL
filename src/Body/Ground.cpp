@@ -33,8 +33,8 @@ void Ground::update(void)
     for (const auto& it : _groundVertex)
         center += it;
     center /= 4;
-    math::Vec3 point0 = math::normalize(_groundVertex[0] - center);
-    math::Vec3 point1 = math::normalize(_groundVertex[1] - center);
+    math::Vec3 point0 = math::normalize(math::Vec3(_groundVertex[0] - center));
+    math::Vec3 point1 = math::normalize(math::Vec3(_groundVertex[1] - center));
     _normal = math::cross(point0, point1);
     _rot = math::Mat4(1.0f);
 }
@@ -45,7 +45,7 @@ math::Vec3 Ground::getCenter(void) const
     for (const auto& it : _groundVertex)
         center += it;
     center /= 4;
-    return center;
+    return math::Vec3(center);
 }
 
 void Ground::draw(void) //깊이버퍼 이상한데?

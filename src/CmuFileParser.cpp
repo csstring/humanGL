@@ -273,7 +273,7 @@ bool CmuFileParser::parseAsfHierarchy(std::ifstream& ifs)
             math::Mat4 rotY = math::rotate(axis[1], math::Vec3(0.0f,1.0f,0.0f));
             math::Mat4 rotZ = math::rotate(axis[2], math::Vec3(0.0f,0.0f,1.0f));
 
-            math::Mat3 c = rotZ * rotY * rotX;
+            math::Mat3 c = math::Mat3(rotZ * rotY * rotX);
             bone._c = math::quatCast(c);
             bone._invC = math::quatCast(math::inverse(c));
 

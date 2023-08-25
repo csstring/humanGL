@@ -8,7 +8,7 @@ namespace math
 {
   class Mat3
   {
-    private:
+    public:
       Vec3 _value[3];
 
     public:
@@ -16,15 +16,15 @@ namespace math
       Vec3& operator[](int i);
       const Vec3& operator[](int i) const;
 
-      explicit Mat3();
-		  explicit Mat3(const Mat3& m);
+      Mat3();
+		  Mat3(const Mat3& m);
+      explicit Mat3(const Mat4& x);
       explicit Mat3(const float& x);
-		  Mat3(
+		  explicit Mat3(
 			const float& x0, const float& y0, const float& z0,
 			const float& x1, const float& y1, const float& z1,
 			const float& x2, const float& y2, const float& z2);
-		  Mat3( const Vec3& v0, const Vec3& v1, const Vec3& v2);
-      Mat3(const Mat4& x);
+		  explicit Mat3( const Vec3& v0, const Vec3& v1, const Vec3& v2);
       ~Mat3(){};
 
       Mat3& operator=(const Mat3& m);

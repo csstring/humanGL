@@ -44,7 +44,7 @@ void CollisionCylinder::initialize(physx::PxPhysics* gPhysics, physx::PxScene* g
 // }
 void CollisionCylinder::update(math::Mat4 translate)
 {
-    math::Vec3 pos = translate * math::Vec4(0,0,0,1);
+    math::Vec3 pos = math::Vec3(translate * math::Vec4(0,0,0,1));
     gCylinderActor->setGlobalPose(physx::PxTransform(pos.x, pos.y, pos.z));
     auto copy = gCylinderActor->getGlobalPose().p;
     math::Vec3 copy1 = math::Vec3(copy.x, copy.y, copy.z);

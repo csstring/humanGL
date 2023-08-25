@@ -99,6 +99,7 @@ namespace math
 
 		return (f1 * v1 + f2 * v2 + f3 * v3 + f4 * v4) / static_cast<float>(2);
   }
+
   Quat quatCast(const Mat3& m)
   {
     float fourXSquaredMinus1 = m[0][0] - m[1][1] - m[2][2];

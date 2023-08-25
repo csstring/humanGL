@@ -54,8 +54,8 @@ void EyeIK::solveIK(
     for (uint32 i : _boneIndexVec)
     {
         math::Mat4 inCharTrans = controller.getMatrixInCharLocal(i, controller.getPlayer()->getCharacterSkeleton(), _boneLocalVector);
-        inCharLocalPos.push_back(inCharTrans * math::Vec4(0,0,0,1));
-        inCharLocalRot.push_back(math::Mat3(inCharTrans));
+        inCharLocalPos.push_back(math::Vec3(inCharTrans * math::Vec4(0,0,0,1)));
+        inCharLocalRot.push_back(math::Mat4(math::Mat3(inCharTrans)));
     }
 
     if (_isFirst == true)
@@ -65,10 +65,10 @@ void EyeIK::solveIK(
     }
 
     math::Mat4 charLocalToWorld = worldTranslate * worldRotation;
-    math::Vec3 targetPosInCharLocal = math::inverse(charLocalToWorld) * math::Vec4(_targetPosition, 1);
+    math::Vec3 targetPosInCharLocal = math::Vec3(math::inverse(charLocalToWorld) * math::Vec4(_targetPosition, 1));
     math::Vec3 middleEye = math::mix(*(inCharLocalPos.end()-2), *(inCharLocalPos.end()-1),0.8);
     math::Vec3 targetDir = targetPosInCharLocal - middleEye;
-    math::Vec3 curSee = inCharLocalRot.back() * math::Vec4(math::cross(math::Vec3(1,0,0), _bonedirection.back()),1);
+    math::Vec3 curSee = math::Vec3(inCharLocalRot.back() * math::Vec4(math::cross(math::Vec3(1,0,0), _bonedirection.back()),1));
     math::Quat afterSee = math::rotation(math::normalize(curSee), math::normalize(targetDir));
 
     for (uint32 i : _boneIndexVec)

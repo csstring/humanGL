@@ -95,8 +95,8 @@ void Character::boneBufferMaping(void)
 
 void Character::worldPositionUpdate(float deltaTime)
 {
-    math::Vec3 t = _worldTrans * _worldRotation * _controller.getMatrixInCharLocal(BONEID::RFOOT, _skeleton, _boneLocalVector) * math::Vec4(0,0,0,1);
-    math::Vec3 root = _worldTrans * _worldRotation * _controller.getMatrixInCharLocal(BONEID::ROOT, _skeleton, _boneLocalVector) * math::Vec4(0,0,0,1);
+    math::Vec3 t = math::Vec3(_worldTrans * _worldRotation * _controller.getMatrixInCharLocal(BONEID::RFOOT, _skeleton, _boneLocalVector) * math::Vec4(0,0,0,1));
+    math::Vec3 root = math::Vec3(_worldTrans * _worldRotation * _controller.getMatrixInCharLocal(BONEID::ROOT, _skeleton, _boneLocalVector) * math::Vec4(0,0,0,1));
 
     // if (t.y > _groundHight)//fix me lastcall
     //     root.y -= _yError * deltaTime;

@@ -24,9 +24,9 @@ void FootIK::isOffGroundCheck(
     math::Mat4 charLocalToWorld)
 {
     bool curIsOffGround;
-    math::Vec3 footPos = charLocalToWorld * math::Vec4(inCharLocalPos[3],1);
-    math::Vec3 tibiaPos = charLocalToWorld * math::Vec4(inCharLocalPos[2],1);
-    math::Vec3 femurPos = charLocalToWorld * math::Vec4(inCharLocalPos[1],1);
+    math::Vec3 footPos = math::Vec3(charLocalToWorld * math::Vec4(inCharLocalPos[3],1));
+    math::Vec3 tibiaPos = math::Vec3(charLocalToWorld * math::Vec4(inCharLocalPos[2],1));
+    math::Vec3 femurPos = math::Vec3(charLocalToWorld * math::Vec4(inCharLocalPos[1],1));
 
     math::Vec3 startPos = math::mix(footPos, tibiaPos, 0.5f);
     startPos.y +=5;
@@ -58,7 +58,7 @@ bool FootIK::findTargetObject(
     math::Vec3 tmpMoveDir
 )
 {
-    math::Vec3 tibiaPos = charLocalToWorld * math::Vec4(inCharLocalPos[3],1);
+    math::Vec3 tibiaPos = math::Vec3(charLocalToWorld * math::Vec4(inCharLocalPos[3],1));
     math::Vec3 targetPos;
     // if (tmpMoveDir == math::Vec3(0.0f))
     //     tibiaPos = charLocalToWorld * math::Vec4(_prevTibiaPos,1);
@@ -93,7 +93,7 @@ bool FootIK::findTargetObject(
         tmpDir = stairDir::NORMAL;
 
     //reach fail
-    if (reachable(inCharLocalPos,disVector ,math::inverse(charLocalToWorld) * math::Vec4(worldTarget,1)) == false && tmpDir != stairDir::DOWNSTAIR)
+    if (reachable(inCharLocalPos,disVector ,math::Vec3(math::inverse(charLocalToWorld) * math::Vec4(worldTarget,1))) == false && tmpDir != stairDir::DOWNSTAIR)
         return false;
 
     if (tmpMoveDir != math::Vec3(0.0f))
@@ -301,8 +301,8 @@ void FootIK::solveIK(
     for (uint32 i : _boneIndexVec)
     {
         inCharTrans.push_back(controller.getMatrixInCharLocal(i, controller.getPlayer()->getCharacterSkeleton(), _boneLocalVector));
-        inCharLocalPos.push_back(inCharTrans.back() * math::Vec4(0,0,0,1));
-        inCharLocalRot.push_back(math::Mat3(inCharTrans.back()));
+        inCharLocalPos.push_back(math::Vec3(inCharTrans.back() * math::Vec4(0,0,0,1)));
+        inCharLocalRot.push_back(math::Mat4(math::Mat3(inCharTrans.back())));
     }
     math::Mat4 charLocalToWorld = worldTranslate * worldRotation;
 
@@ -313,9 +313,9 @@ void FootIK::solveIK(
     }
     //save velocity
     {
-        math::Vec3 beforePos = charLocalToWorld * math::Vec4(0,0,0,1);
+        math::Vec3 beforePos = math::Vec3(charLocalToWorld * math::Vec4(0,0,0,1));
         math::Mat4 curRootTrans = controller.getMatrixInCharLocal(BONEID::ROOT, controller.getPlayer()->getCharacterSkeleton(), _boneLocalVector);
-        math::Vec3 curPos = charLocalToWorld * curRootTrans * math::Vec4(0,0,0,1);
+        math::Vec3 curPos = math::Vec3(charLocalToWorld * curRootTrans * math::Vec4(0,0,0,1));
         saveVelocity(beforePos, curPos);
     }
 
@@ -328,11 +328,11 @@ void FootIK::solveIK(
     if (isStartFindTarget(inCharLocalPos) && _isRootAnimationOn == false && _rootRatio <= 0)// || _retargetTime >= 1000)
     {   
         math::Mat4 rootTrans = charLocalToWorld * controller.getMatrixInCharLocal(BONEID::ROOT, controller.getPlayer()->getCharacterSkeleton(), _boneLocalVector);
-        math::Vec3 foot1Pos = controller.getMatrixInCharLocal(BONEID::RFOOT, controller.getPlayer()->getCharacterSkeleton(), _boneLocalVector) * math::Vec4(0,0,0,1);
-        math::Vec3 foot2Pos = controller.getMatrixInCharLocal(BONEID::LFOOT, controller.getPlayer()->getCharacterSkeleton(), _boneLocalVector) * math::Vec4(0,0,0,1);
+        math::Vec3 foot1Pos = math::Vec3(controller.getMatrixInCharLocal(BONEID::RFOOT, controller.getPlayer()->getCharacterSkeleton(), _boneLocalVector) * math::Vec4(0,0,0,1));
+        math::Vec3 foot2Pos = math::Vec3(controller.getMatrixInCharLocal(BONEID::LFOOT, controller.getPlayer()->getCharacterSkeleton(), _boneLocalVector) * math::Vec4(0,0,0,1));
         foot1Pos.y = 0;
         foot2Pos.y = 0;
-        math::Vec3 moveDir = math::length(foot1Pos - foot2Pos) * 1.6f *  math::normalize(rootTrans * math::Vec4(0,0,1,0));
+        math::Vec3 moveDir = math::length(foot1Pos - foot2Pos) * 1.6f *  math::normalize(math::Vec3(rootTrans * math::Vec4(0,0,1,0)));
 
         if (findTargetObject(inCharLocalPos, physx, charLocalToWorld, moveDir) == true)
         {
@@ -417,10 +417,10 @@ float FootIK::getFirstHitHight(const math::Mat4& charLocalToWorld, const math::V
     math::Vec3 sweepDirection(0,-1,0);
     math::Vec4 inWorldPos = charLocalToWorld * math::Vec4(inCharPos, 1);
     inWorldPos.y += 5;
-    bool hitFlag = physx->sweepTestUseSphere(100, 0.3, inWorldPos, sweepDirection, hit);
+    bool hitFlag = physx->sweepTestUseSphere(100, 0.3, math::Vec3(inWorldPos), sweepDirection, hit);
     inWorldPos = math::Vec4(hit.block.position.x, hit.block.position.y, hit.block.position.z,1);
 
-    math::Vec3 inCharHitPos = math::inverse(charLocalToWorld) * inWorldPos;
+    math::Vec3 inCharHitPos = math::Vec3(math::inverse(charLocalToWorld) * inWorldPos);
     if (hitFlag == false)
         return -100000;
     else

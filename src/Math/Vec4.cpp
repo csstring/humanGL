@@ -9,6 +9,9 @@ Vec4::Vec4(float scalar) : x(scalar), y(scalar), z(scalar), w(scalar)
 {}
 Vec4::Vec4(const Vec4& v) : x(v.x), y(v.y), z(v.z), w(v.w)
 {}
+Vec4::Vec4(const Vec3& v) : x(v.x), y(v.y), z(v.z), w(0)
+{}
+
 Vec4::Vec4():x(0), y(0), z(0), w(0)
 {}
 Vec4::Vec4(float x, const Vec3& v) : x(x), y(v.x), z(v.y), w(v.z)

@@ -78,6 +78,56 @@ void fileLoad(Simulator& simulator)
         amcParser.loadAMCFile();
     }
 }
+using namespace std;
+void memoryLayoutCheck(glm::mat4& glmM, math::Mat4& mathM)
+{
+    unsigned char *ptrGlm = (unsigned char *)(&glmM[0].x);
+    unsigned char *ptrMath = (unsigned char *)(&mathM[0].x);
+    cout << "============ GLM =============" << endl; 
+    for (int i =0; i <4; ++i)
+    {
+        for (int j =0; j < 4; ++j)
+        {
+            float* originPtr = (float*)ptrGlm;
+            float val = *originPtr;
+            cout << val << " ";
+            ptrGlm += 4;
+        }
+        cout << endl;
+    }
+    for (int i =0; i <4; ++i)
+    {
+        for (int j =0; j < 4; ++j)
+        {
+            float val = glmM[i][j];
+            cout << val << " ";
+        }
+        cout << endl;
+    }
+    cout << "=========================" << endl;
+    cout << "============ Math =============" << endl; 
+    for (int i =0; i <4; ++i)
+    {
+        for (int j =0; j < 4; ++j)
+        {
+            float* originPtr = (float*)ptrMath;
+            float val = *originPtr;
+            cout << val << " ";
+            ptrMath += 4;
+        }
+        cout << endl;
+    }
+    for (int i =0; i <4; ++i)
+    {
+        for (int j =0; j < 4; ++j)
+        {
+            float val = mathM[i][j];
+            cout << val << " ";
+        }
+        cout << endl;
+    }
+    cout << "=========================" << endl; 
+}
 
 int main() 
 {
@@ -106,48 +156,6 @@ int main()
         shader.use();
         window.processInput(simulator, _camera);
         math::Mat4 projection = math::perspective(math::radians(_camera._zoom), (float)WINDOW_WITH / (float)WINDOW_HEIGHT, 0.1f, 500.0f);
-        glm::mat4 pro = glm::perspective(math::radians(_camera._zoom), (float)WINDOW_WITH / (float)WINDOW_HEIGHT, 0.1f, 500.0f);
-        math::Mat4 transPose;
-        glm::mat4 transPro = glm::transpose(pro);
-        // {
-		// 	transPose[0][0] = projection[0][0];
-		// 	transPose[0][1] = projection[1][0];
-		// 	transPose[0][2] = projection[2][0];
-		// 	transPose[0][3] = projection[3][0];
-
-		// 	transPose[1][0] = projection[0][1];
-		// 	transPose[1][1] = projection[1][1];
-		// 	transPose[1][2] = projection[2][1];
-		// 	transPose[1][3] = projection[3][1];
-
-		// 	transPose[2][0] = projection[0][2];
-		// 	transPose[2][1] = projection[1][2];
-		// 	transPose[2][2] = projection[2][2];
-		// 	transPose[2][3] = projection[3][2];
-
-		// 	transPose[3][0] = projection[0][3];
-		// 	transPose[3][1] = projection[1][3];
-		// 	transPose[3][2] = projection[2][3];
-		// 	transPose[3][3] = projection[3][3];
-        // }
-        // {
-        //     std::cout << transPose[0][0] << " "<< transPro[0][0]<< std::endl;
-        //     std::cout << transPose[1][1] << " "<<transPro[1][1]<< std::endl; 
-        //     std::cout << transPose[2][2] << " "<<transPro[2][2]<<  std::endl; 
-        //     std::cout << transPose[2][3] << " "<<transPro[2][3]<<  std::endl; 
-        //     std::cout << transPose[3][2] << " "<<transPro[3][2] << std::endl; 
-        //     std::cout << transPose[0][1] << transPose[0][2] << transPose[0][3] << std::endl;
-        //     std::cout << transPose[1][0] << transPose[1][2] << transPose[1][3] << std::endl;
-        //     std::cout << transPose[2][0] << transPose[2][1] << std::endl;
-        //     std::cout << transPose[3][0] << transPose[3][1] << transPose[3][3] << std::endl;
-        //     std::cout << "math end" <<std::endl;
-        //     std::cout << transPro[0][1] << transPro[0][2] << transPro[0][3] << std::endl;
-        //     std::cout << transPro[1][0] << transPro[1][2] << transPro[1][3] << std::endl;
-        //     std::cout << transPro[2][0] << transPro[2][1] << std::endl;
-        //     std::cout << transPro[3][0] << transPro[3][1] << transPro[3][3] << std::endl;
-        //     std::cout << "glm end" <<std::endl;
-        // }
-
         _camera.update();
         shader.setMat4("projection", projection);
         shader.setMat4("view", _camera._view);

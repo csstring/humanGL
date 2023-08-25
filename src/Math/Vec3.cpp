@@ -13,6 +13,7 @@ Vec3::Vec3():x(0), y(0), z(0)
 {}
 Vec3::Vec3(const Vec4& v) : x(v.x), y(v.y), z(v.z)
 {}
+
 float& Vec3::operator[](int i)
 {
 	assert(i >= 0 && i < 3);
@@ -44,6 +45,14 @@ const float& Vec3::operator[](int i) const
 }
 
 Vec3& Vec3::operator=(Vec3 const& v)
+{
+	this->x = static_cast<float>(v.x);
+	this->y = static_cast<float>(v.y);
+	this->z = static_cast<float>(v.z);
+	return *this;
+}
+
+Vec3& Vec3::operator=(Vec4 const& v)
 {
 	this->x = static_cast<float>(v.x);
 	this->y = static_cast<float>(v.y);

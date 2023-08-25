@@ -18,6 +18,7 @@ class Vec4
     explicit Vec4(float scalar);
 		Vec4();
     Vec4(const Vec4& v);
+		explicit Vec4(const Vec3& v);
 		Vec4(float x, const Vec3& v);
 		Vec4(const Vec3& v, float w);
     ~Vec4(){};

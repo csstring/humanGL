@@ -16,12 +16,13 @@ class Vec3
     explicit Vec3(float x, float y, float z);
     explicit Vec3(float scalar);
     Vec3(const Vec3& v);
-		Vec3(const Vec4& v);
+		explicit Vec3(const Vec4& v);
 		Vec3();
     ~Vec3(){};
 		float& operator[](int i);
 		const float& operator[](int i) const;
 		Vec3& operator=(Vec3 const& v);
+		Vec3& operator=(Vec4 const& v);
 		Vec3& operator+=(float scalar);
 		Vec3& operator+=(Vec3 const& v);
 		Vec3& operator-=(float scalar);

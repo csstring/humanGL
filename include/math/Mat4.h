@@ -9,7 +9,7 @@ namespace math
 {
   class Mat4
   {
-    private:
+    public:
       Vec4 _value[4];
 
     public:
@@ -18,15 +18,15 @@ namespace math
       const Vec4& operator[](int i) const;
 
       explicit Mat4();
-		  explicit Mat4(const Mat4& m);
+		  Mat4(const Mat4& m);
+      explicit Mat4(const Mat3& x);
       explicit Mat4(const float& x);
-		  Mat4(
+		  explicit Mat4(
 			const float& x0, const float& y0, const float& z0, const float& w0,
 			const float& x1, const float& y1, const float& z1, const float& w1,
 			const float& x2, const float& y2, const float& z2, const float& w2,
 			const float& x3, const float& y3, const float& z3, const float& w3);
-		  Mat4( const Vec4& v0, const Vec4& v1, const Vec4& v2, const Vec4& v3);
-      Mat4(const Mat3& x);
+		  explicit Mat4( const Vec4& v0, const Vec4& v1, const Vec4& v2, const Vec4& v3);
       ~Mat4(){};
 
       Mat4& operator=(const Mat4& m);

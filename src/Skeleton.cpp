@@ -30,7 +30,7 @@ math::Vec3 Skeleton::getCharLocalPosition(BONEID boneID)
             break;
         bone = &_boneVector[bone->_parentBoneIndex];
     }
-    return matrix * math::Vec4(0,0,0,1);
+    return math::Vec3(matrix * math::Vec4(0,0,0,1));
 }
 
 float Skeleton::getSkeletonHeight(void)
