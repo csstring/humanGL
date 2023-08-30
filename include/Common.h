@@ -12,6 +12,9 @@
 #include "math/Vec3.h"
 #include "math/Vec4.h"
 #include <filesystem>
+#include "imgui.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
 
 typedef signed char         int8;
 typedef signed short        int16;

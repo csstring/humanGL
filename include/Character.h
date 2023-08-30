@@ -8,8 +8,6 @@ class Animation;
 class Skeleton;
 class Controller;
 class Ground;
-
-static float scaleUpVal = 2;
 class Character
 {   
     private:
@@ -21,6 +19,8 @@ class Character
         const Controller&      _controller;
         bool                   _isFirst;
         std::chrono::steady_clock::time_point _lastCallTime;
+        math::Vec3 _skinColor;
+        float scaleUpVal = 2;
 
     public:
         Blender _blender;
@@ -36,7 +36,7 @@ class Character
     public:
         Character(
             const Skeleton& skeleton, const Controller& controller
-        ) : _skeleton(skeleton), _controller(controller), _isFirst(true){};
+        ) : _skeleton(skeleton), _controller(controller), _isFirst(true), _skinColor(math::Vec3(1.0f)){};
         ~Character(){};
         void initialize(void);
         const Skeleton& getCharacterSkeleton(void) const {return _skeleton;};

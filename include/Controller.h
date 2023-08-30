@@ -21,7 +21,7 @@ class Controller
         void draw(void);
         void update(void);
 
-        math::Mat4 getMatrixInCharLocal(uint32 boneindex,const Skeleton& _skeleton, const std::vector<BoneLocal>& _boneLocalVector) const;
+        math::Mat4 getMatrixInCharLocal(uint32 boneindex,const Skeleton& _skeleton, const std::vector<BoneLocal>& _boneLocalVector, float scale = 1) const;
         void pushAnimation(const std::string& name, const std::vector<Animation>& _animations, BlendNode nodeNum);
         
         void controllPlayer(KeyInput key, const std::vector<Animation>& _animations);

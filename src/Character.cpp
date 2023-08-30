@@ -101,7 +101,9 @@ void Character::draw(void)
 {
     const std::vector<Bone>& boneVector = _skeleton.getBoneVector();
 
-    math::Vec3 color(0.9412, 0.7922, 0.2549);
+    ImGui::ColorEdit3("clear color", &_skinColor.x);
+    ImGui::SliderFloat("float", &scaleUpVal, 0.2f, 3.0f);
+
     for(const Bone& bone : boneVector)
     {
         if (bone._parentBoneIndex == -1)
@@ -109,17 +111,17 @@ void Character::draw(void)
         math::Mat4 parentTransForm;
         math::Vec3 parentBoneDir = boneVector[bone._parentBoneIndex]._direction;
         if (bone._parentBoneIndex != 0)    
-            parentTransForm = _worldTrans * _worldRotation * _controller.getMatrixInCharLocal(bone._parentBoneIndex, _skeleton, _boneLocalVector) * ft_rotate(math::Vec3(0.0,0.0,1.0), -parentBoneDir);
+            parentTransForm = _worldTrans * _worldRotation * _controller.getMatrixInCharLocal(bone._parentBoneIndex, _skeleton, _boneLocalVector,scaleUpVal) * ft_rotate(math::Vec3(0.0,0.0,1.0), -parentBoneDir);
         else
-            parentTransForm = _worldTrans * _worldRotation * _controller.getMatrixInCharLocal(bone._parentBoneIndex, _skeleton, _boneLocalVector);
+            parentTransForm = _worldTrans * _worldRotation * _controller.getMatrixInCharLocal(bone._parentBoneIndex, _skeleton, _boneLocalVector, scaleUpVal);
         math::Vec3 parentPos = math::Vec3(parentTransForm * math::Vec4(0,0,0,1));
         
-        math::Mat4 toParentDir = _worldTrans * _worldRotation * _controller.getMatrixInCharLocal(bone._boneIndex, _skeleton, _boneLocalVector) * ft_rotate(math::Vec3(0.0,0.0,1.0), -bone._direction);// * glm::inverse(test3);
+        math::Mat4 toParentDir = _worldTrans * _worldRotation * _controller.getMatrixInCharLocal(bone._boneIndex, _skeleton, _boneLocalVector,scaleUpVal) * ft_rotate(math::Vec3(0.0,0.0,1.0), -bone._direction);// * glm::inverse(test3);
         math::Quat WorldRot = math::quatCast(toParentDir);
         math::Vec3 worldPos = math::Vec3(toParentDir * math::Vec4(0,0,0,1));
         float length = 1.0f * _skeleton.getGBL() * bone._length * scaleUpVal;
 
-        Cube box(math::Vec3(0.5,0.5,length), math::Vec3(0.0f), color);
+        Cube box(math::Vec3(0.5,0.5,length), math::Vec3(0.0f), _skinColor);
         // Cube box(math::Vec3(length), math::Vec3(0.0f), color);
         box._translate = math::translate(math::Mat4(1.0f), math::mix(worldPos, parentPos, 0.5));
         box._rot = WorldRot; 

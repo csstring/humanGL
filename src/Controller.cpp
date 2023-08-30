@@ -13,7 +13,7 @@ void Controller::initialize(void)
 
 void Controller::draw(void)
 {
-    _targetCharterCube.draw();
+    // _targetCharterCube.draw();
 }
 
 void Controller::update(void)
@@ -30,14 +30,14 @@ void Controller::setPlayer(Character* player)
     _player = player;
 }
 
-math::Mat4 Controller::getMatrixInCharLocal(uint32 boneindex,const Skeleton& _skeleton, const std::vector<BoneLocal>& _boneLocalVector) const
+math::Mat4 Controller::getMatrixInCharLocal(uint32 boneindex,const Skeleton& _skeleton, const std::vector<BoneLocal>& _boneLocalVector, float scale) const
 {
     const std::vector<Bone>& boneVector = _skeleton.getBoneVector();
     math::Mat4 matrix(1.0f);
     const Bone* bone = &boneVector[boneindex];
     while (true)
     {
-        math::Mat4 trans = math::translate(math::Mat4(1.0f), _boneLocalVector[bone->_boneIndex].translationInBoneLocal * scaleUpVal);
+        math::Mat4 trans = math::translate(math::Mat4(1.0f), _boneLocalVector[bone->_boneIndex].translationInBoneLocal * scale);
         math::Quat rot = _boneLocalVector[bone->_boneIndex].rotationInBoneLocal;
         matrix = trans * math::toMat4(rot) * matrix;
         if (bone->_parentBoneIndex == -1)

@@ -14,8 +14,10 @@
 #include <iostream>
 #include <unistd.h>
 #include "math/Math.h"
+#include "Mygui.h"
 
 Camera      _camera;
+Mygui       mygui;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
@@ -70,16 +72,19 @@ int main(int ac, char **av)
 
     Simulator simulator;
     BodyFactory bodyFactory;
+
+    mygui.initialize(window._window);
     simulator.fileLoad(av[1]);
     simulator.initialize();
     // camera mouse call
-    glfwSetFramebufferSizeCallback(window._window, framebuffer_size_callback);
-    glfwSetCursorPosCallback(window._window, mouse_callback);
-    glfwSetScrollCallback(window._window, scroll_callback);
-    glfwSetInputMode(window._window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    // glfwSetFramebufferSizeCallback(window._window, framebuffer_size_callback);
+    // glfwSetCursorPosCallback(window._window, mouse_callback);
+    // glfwSetScrollCallback(window._window, scroll_callback);
+    // glfwSetInputMode(window._window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     while (window.isWindowClose() == false)
     {
+        mygui.update();
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
         shader.use();
@@ -90,6 +95,7 @@ int main(int ac, char **av)
         shader.setMat4("view", _camera._view);
         simulator.update();
         simulator.draw();
+        mygui.render();
         window.bufferSwap();
         glfwPollEvents();
     }
