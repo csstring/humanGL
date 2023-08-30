@@ -1,5 +1,4 @@
 #include "Body/Cylinder.h"
-#include "GL/glew.h"
 #include <cmath>
 #include "EnumHeader.h"
 #include "math/Math.h"

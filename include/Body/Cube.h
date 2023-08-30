@@ -1,6 +1,5 @@
 #pragma once
 #include "Common.h"
-
 class Cube
 {
     private:
@@ -24,7 +23,12 @@ class Cube
             _rot = math::Quat(1.0f, math::Vec3(0.0f));
             _translate = math::Mat4(1.0f);
         };
-        ~Cube(){};
+        ~Cube()
+        {
+            glDeleteVertexArrays(1, &_VAO);
+            glDeleteBuffers(1, &_VBO);
+            glDeleteBuffers(1, &_VCO);
+        };
         void initialize(void);
         void draw(void);
         void update(void);

@@ -2,7 +2,6 @@
 #include "Skeleton.h"
 #include "TimeNode.h"
 #include "Animation.h"
-#include "GL/glew.h"
 #include "Body/Cylinder.h"
 #include "Controller.h"
 #include <queue>
@@ -26,41 +25,13 @@ void Character::initialize(void)
 {
     int64 size = _skeleton.getBoneVector().size();
 
-    VAO.resize(size);
-    VBO.resize(size);
-    VBC.resize(size);
 
     _boneLocalVector.resize(size);
     _worldTrans = math::Mat4(1.0f);
     _worldRotation = math::Mat4(1.0f);
-    boneBufferMaping();
+
 
     _blender.initialize();
-}
-
-void Character::boneBufferMaping(void)
-{
-    const std::vector<Bone>& boneVector = _skeleton.getBoneVector();
-    uint32 boneIndex = 0;
-    for(const Bone& bone : boneVector)
-    {
-        glGenVertexArrays(1, &VAO[bone._boneIndex]);
-        glBindVertexArray(VAO[bone._boneIndex]);
-
-        glGenBuffers(1, &VBO[bone._boneIndex]);
-        glBindBuffer(GL_ARRAY_BUFFER, VBO[bone._boneIndex]);
-        glEnableVertexAttribArray(0);	
-        glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, (void*)0);//size 열의 개수
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-        glGenBuffers(1, &VBC[bone._boneIndex]);
-        glBindBuffer(GL_ARRAY_BUFFER, VBC[bone._boneIndex]);
-        glEnableVertexAttribArray(1);	
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);//size 열의 개수
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-        glBindVertexArray(0);
-    }
 }
 
 void Character::worldPositionUpdate(float deltaTime)

@@ -5,7 +5,6 @@
 #include <fstream>
 #include <sstream>
 #include <unistd.h>
-#include "GL/glew.h"
 #include "shader.h"
 
 Shader::Shader(const char* vertexRelativePath,const char* fragmentRelativePath)

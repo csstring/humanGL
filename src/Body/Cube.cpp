@@ -1,5 +1,4 @@
 #include "Body/Cube.h"
-#include "GL/glew.h"
 #include "math/Math.h"
 void Cube::initialize(void)
 {

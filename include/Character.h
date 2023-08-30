@@ -11,7 +11,7 @@ class Ground;
 class Character
 {   
     private:
-        std::vector<uint32>    VAO, VBO, VBC;
+
         std::vector<BoneLocal> _boneLocalVector;
         math::Mat4              _worldTrans;
         math::Mat4              _worldRotation;
@@ -37,7 +37,8 @@ class Character
         Character(
             const Skeleton& skeleton, const Controller& controller
         ) : _skeleton(skeleton), _controller(controller), _isFirst(true), _skinColor(math::Vec3(1.0f)){};
-        ~Character(){};
+        ~Character()
+        {};
         void initialize(void);
         const Skeleton& getCharacterSkeleton(void) const {return _skeleton;};
         void update(const std::chrono::steady_clock::time_point& curTime);

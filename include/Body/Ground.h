@@ -1,6 +1,5 @@
 #pragma once
 #include "Common.h"
-
 class Ground
 {
     private:
@@ -9,7 +8,12 @@ class Ground
         uint32 _VAO, _VBO, _VCO;
     public:
         Ground() : _rot(math::Mat4(1.0f)){};
-        ~Ground(){};
+        ~Ground()
+        {
+            glDeleteVertexArrays(1, &_VAO);
+            glDeleteBuffers(1, &_VBO);
+            glDeleteBuffers(1, &_VCO);
+        };
         void initialize(void);
         void draw(void);
         void update(void);

@@ -1,6 +1,4 @@
 #include "Mygui.h"
-#include "GLFW/glfw3.h"
-
 void Mygui::initialize(GLFWwindow* window)
 {
   IMGUI_CHECKVERSION();

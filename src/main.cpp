@@ -1,5 +1,4 @@
 #define GL_SILENCE_DEPRECATION
-#include "GLFW/glfw3.h"
 #include "Window.h"
 #include "shader.h"
 #include "Skeleton.h"
@@ -99,4 +98,6 @@ int main(int ac, char **av)
         window.bufferSwap();
         glfwPollEvents();
     }
+
+    glfwTerminate();
 }

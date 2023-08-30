@@ -1,5 +1,4 @@
 #include "Body/Ground.h"
-#include "GL/glew.h"
 #include "math/Math.h"
 void Ground::initialize(void)
 {

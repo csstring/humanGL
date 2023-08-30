@@ -1,5 +1,4 @@
 #include "Camera.h"
-#include "GLFW/glfw3.h"
 #include "math/Math.h"
 
 void Camera::update(void)

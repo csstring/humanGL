@@ -1,5 +1,4 @@
 #include "Body/Line.h"
-#include "GL/glew.h"
 
 void Line::initialize(math::Vec3 color, uint32 VBC)
 {
