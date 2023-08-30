@@ -4,7 +4,6 @@
 #include "Character.h"
 #include "Body/Cube.h"
 #include "EnumHeader.h"
-#include "Body/CollisionCylinder.h"
 #include "math/Math.h"
 void Simulator::addPlayer(const std::string initAnimationName)
 {
@@ -12,8 +11,7 @@ void Simulator::addPlayer(const std::string initAnimationName)
     float height = _skeleton.getSkeletonHeight();
     math::Vec3 rFoot = _skeleton.getCharLocalPosition(BONEID::RFOOT) - _skeleton.getCharLocalPosition(BONEID::ROOT);
 
-    CollisionCylinder* collisionMesh = nullptr;
-    Character* newPlayer = _factory.makeCharacter(_skeleton, _controller, collisionMesh);
+    Character* newPlayer = _factory.makeCharacter(_skeleton, _controller);
     Character* oldPlayer = _controller.getPlayer();
     
     _players.push_back(newPlayer);
@@ -24,17 +22,13 @@ void Simulator::addPlayer(const std::string initAnimationName)
 
 void Simulator::initialize(void)
 {
-    _physx.Initialize();
     addPlayer("idle");
     _controller.initialize();
 
     math::Quat rot = math::angleAxis(math::radians(10.0f), math::Vec3(0.0f, 0.0f, 1.0f));
-    _cube = new CollisionCube(math::Vec3(0.001,0.001,0.001), math::Vec3(0,-10.5,0), rot);
-    _cube->initialize(_physx.gPhysics, _physx.gScene);
 
     _ground.initialize();
     _controller.setPlayer(_players.front());
-    _scene.initialize(_physx.gPhysics, _physx.gScene);
     _prevTime = getCurTimePoint();
 }
 
@@ -42,9 +36,7 @@ void Simulator::draw(void)
 {
     for (Character* player : _players)
         player->draw();
-    _cube->draw();
     _controller.draw();
-    _scene.draw();
     // _ground.draw();
 }
 
@@ -60,17 +52,12 @@ void Simulator::update(void)
     }
     float radian = PI * delta * 0.25f;
     math::Quat groundCubeRot = math::angleAxis(radian, math::Vec3(0,1,0));
-    _cube->update(groundCubeRot);
     _controller.update();
-    _scene.update();
     // _ground.update();
     for (Character* player : _players)
     {
-        player->update(curTime, _cube->_position , &_physx);
+        player->update(curTime);
     }
-    _physx.gScene->simulate(delta);
-
-    _physx.gScene->fetchResults(true);
 
     _prevTime = curTime;
 }
@@ -134,6 +121,4 @@ Simulator::~Simulator()
 {
     for (auto it : _players)
         delete it;
-    if (_cube != nullptr)
-        delete _cube;
 }

@@ -2,7 +2,6 @@
 #include "Skeleton.h"
 #include "Animation.h"
 #include "AnimationDataResize.h"
-#include "Quantization.h"
 #include "EnumHeader.h"
 #include "fstream"
 #include "math/Math.h"

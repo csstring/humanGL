@@ -4,7 +4,6 @@
 #include <string>
 #include <vector>
 #include <chrono>
-#include "PxPhysicsAPI.h"
 #include <ostream>
 #include <cmath>
 #include "math/Mat3.h"
@@ -24,6 +23,7 @@ typedef unsigned int        uint32;
 typedef unsigned long       uint64;        
 
 const float OVERLAPTIME = 200;
+const float scaleUpVal = 2;
 class Noncopyable
 {
     public:
@@ -55,8 +55,6 @@ inline std::chrono::steady_clock::time_point getAfterTimePoint(float time)
 {
     return std::chrono::steady_clock::now() + std::chrono::duration_cast<std::chrono::steady_clock::duration>(std::chrono::duration<double>(time/1000));
 }
-
-std::string ft_to_string(const physx::PxVec3& vec);
 
 inline float getMilisecondTime(const std::chrono::steady_clock::time_point& curTime, const std::chrono::steady_clock::time_point& _prevTime)
 {

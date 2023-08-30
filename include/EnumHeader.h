@@ -43,3 +43,8 @@ enum class LowerState
 {
     DRINK, IDLE, PUNCH, WALK, RUN, ROLL, JUMP=5, GOLF
 };
+
+enum class stairDir
+{
+    UPSTAIR, DOWNSTAIR, NORMAL
+};

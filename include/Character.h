@@ -7,11 +7,8 @@ struct AnimationData;
 class Animation;
 class Skeleton;
 class Controller;
-class EyeIK;
-class FootIK;
 class Ground;
-class CollisionCylinder;
-class Physx;
+
 class Character
 {   
     private:
@@ -25,11 +22,7 @@ class Character
         std::chrono::steady_clock::time_point _lastCallTime;
 
     public:
-        CollisionCylinder* _collisionMesh;
         Blender _blender;
-        EyeIK* _eyeIK = nullptr;
-        FootIK* _RfootIK = nullptr;
-        FootIK* _LfootIK = nullptr; 
         UpperState _upState;
         LowerState _lowerState;
         float      _yError = 0.001;
@@ -41,12 +34,12 @@ class Character
 
     public:
         Character(
-            const Skeleton& skeleton, const Controller& controller, CollisionCylinder* collisionMesh
-        ) : _skeleton(skeleton), _controller(controller), _isFirst(true), _collisionMesh(collisionMesh){};
-        ~Character();
+            const Skeleton& skeleton, const Controller& controller
+        ) : _skeleton(skeleton), _controller(controller), _isFirst(true){};
+        ~Character(){};
         void initialize(void);
         const Skeleton& getCharacterSkeleton(void) const {return _skeleton;};
-        void update(const std::chrono::steady_clock::time_point& curTime, math::Vec3 eyeTarget, Physx* physx);
+        void update(const std::chrono::steady_clock::time_point& curTime);
         void draw(void);
         void rotationY(float radian);
         math::Mat4 getCharacterWorldPosition(void) const;

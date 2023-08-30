@@ -8,7 +8,6 @@
 #include "Simulator.h"
 #include "AMCFileParser.h"
 #include "Body/Ground.h"
-#include "AnimationCompressor.h"
 #include "Body/BodyFactory.h"
 #include "Camera.h"
 #include "Body/Cube.h"
@@ -69,7 +68,6 @@ void fileLoad(Simulator& simulator)
     CmuFileParser parser(asfPath,&simulator._skeleton, &simulator._animations[0]);
     parser.loadCmuFile();
 
-    AnimationCompressor compressor;
     AnimationData root = simulator._animations[0]._rootNode;
     for (int i = 0; i < simulator._animations.size(); ++i)
     {
@@ -86,7 +84,7 @@ void leakCheck()
 
 int main() 
 {
-    atexit(leakCheck);
+    // atexit(leakCheck);
     Window window;
     Shader shader("./shaderSource/VertexShader.glsl","./shaderSource/FragmentShader.glsl");
     

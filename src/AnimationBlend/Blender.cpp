@@ -5,7 +5,6 @@
 #include "AnimationBlend/LeftArmNode.h"
 #include "BoneLocal.h"
 #include "Skeleton.h"
-#include "IK/IKUtility.h"
 
 IBlendNode* Blender::getBlendNode(BlendNode nodeNum)
 {

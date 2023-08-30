@@ -5,15 +5,12 @@
 #include "GL/glew.h"
 #include "Body/Cylinder.h"
 #include "Controller.h"
-#include "IK/EyeIK.h"
-#include "IK/FootIK.h"
 #include <queue>
 #include "AnimationBlend/Blender.h"
 #include "AnimationBlend/IBlendNode.h"
 #include "Body/Ground.h"
-#include "Body/CollisionCylinder.h"
 #include "math/Math.h"
-
+#include "Body/Cube.h"
 
 void Character::rotationY(float radian)
 {
@@ -39,13 +36,6 @@ void Character::initialize(void)
     boneBufferMaping();
 
     _blender.initialize();
-    _eyeIK = new EyeIK(_skeleton.getBoneVector());
-    _eyeIK->initialize(BONEID::HEAD, BONEID::UPPERBACK);
-    _RfootIK = new FootIK(_skeleton.getBoneVector());
-    _RfootIK->initialize(BONEID::RFOOT, BONEID::ROOT);
-
-    _LfootIK = new FootIK(_skeleton.getBoneVector());
-    _LfootIK->initialize(BONEID::LFOOT, BONEID::ROOT);
 }
 
 void Character::boneBufferMaping(void)
@@ -78,14 +68,14 @@ void Character::worldPositionUpdate(float deltaTime)
     math::Vec3 t = math::Vec3(_worldTrans * _worldRotation * _controller.getMatrixInCharLocal(BONEID::RFOOT, _skeleton, _boneLocalVector) * math::Vec4(0,0,0,1));
     math::Vec3 root = math::Vec3(_worldTrans * _worldRotation * _controller.getMatrixInCharLocal(BONEID::ROOT, _skeleton, _boneLocalVector) * math::Vec4(0,0,0,1));
 
-    // if (t.y > _groundHight)//fix me lastcall
-    //     root.y -= _yError * deltaTime;
-    // else if (t.y < _groundHight)
-    //     root.y += _yError * deltaTime;
+    if (t.y > _groundHight)
+        root.y -= _yError * deltaTime;
+    else if (t.y < _groundHight)
+        root.y += _yError * deltaTime;
     _worldTrans = math::translate(math::Mat4(1.0f), root);
 }
 
-void Character::update(const std::chrono::steady_clock::time_point& curTime, math::Vec3 eyeTarget, Physx* physx)
+void Character::update(const std::chrono::steady_clock::time_point& curTime)
 {
     std::chrono::milliseconds delta;
     static int i = 0;
@@ -102,16 +92,7 @@ void Character::update(const std::chrono::steady_clock::time_point& curTime, mat
     _blender.eraseAnimationCall(curTime);
     worldPositionUpdate(delta.count());
     _blender.animationUpdate(curTime, _boneLocalVector, _lowerState, _upState);
-    // _collisionMesh->update(_worldTrans);
 
-    // _eyeIK->setTargetPosition(eyeTarget);
-    // _eyeIK->solveIK(_boneLocalVector, _worldRotation, _worldTrans, _controller, curTime);
-
-    _RfootIK->solveIK(_boneLocalVector, _worldRotation, _worldTrans, _controller, curTime, _lowerState, physx);
-    _RfootIK->setCharGroundHight(_groundHight);
-
-    _LfootIK->solveIK(_boneLocalVector, _worldRotation, _worldTrans, _controller, curTime, _lowerState, physx);
-    _LfootIK->setCharGroundHight(_groundHight);
     _lastCallTime = curTime;
 }
 
@@ -119,32 +100,33 @@ void Character::update(const std::chrono::steady_clock::time_point& curTime, mat
 void Character::draw(void)
 {
     const std::vector<Bone>& boneVector = _skeleton.getBoneVector();
-    // _collisionMesh->draw();
+
     math::Vec3 color(0.9412, 0.7922, 0.2549);
     for(const Bone& bone : boneVector)
     {
-        glBindVertexArray(VAO[bone._boneIndex]);
+        if (bone._parentBoneIndex == -1)
+            continue;
+        math::Mat4 parentTransForm;
+        math::Vec3 parentBoneDir = boneVector[bone._parentBoneIndex]._direction;
+        if (bone._parentBoneIndex != 0)    
+            parentTransForm = _worldTrans * _worldRotation * _controller.getMatrixInCharLocal(bone._parentBoneIndex, _skeleton, _boneLocalVector) * ft_rotate(math::Vec3(0.0,0.0,1.0), -parentBoneDir);
+        else
+            parentTransForm = _worldTrans * _worldRotation * _controller.getMatrixInCharLocal(bone._parentBoneIndex, _skeleton, _boneLocalVector);
+        math::Vec3 parentPos = math::Vec3(parentTransForm * math::Vec4(0,0,0,1));
+        
         math::Mat4 toParentDir = _worldTrans * _worldRotation * _controller.getMatrixInCharLocal(bone._boneIndex, _skeleton, _boneLocalVector) * ft_rotate(math::Vec3(0.0,0.0,1.0), -bone._direction);// * glm::inverse(test3);
-        Cylinder cylinder(0.2, 1.0f *_skeleton.getGBL() * bone._length ,16, toParentDir);
-        cylinder.initialize(color, VBC[bone._boneIndex], static_cast<BONEID>(bone._boneIndex));
-        cylinder.render(VBO[bone._boneIndex]);
-        // Line line(0.7 *_skeleton.getGBL() * bone._length, toParentDir);
-        // line.initialize(color, VBC[bone._boneIndex]);
-        // line.render(VBO[bone._boneIndex]);
-        glBindVertexArray(0);
+        math::Quat WorldRot = math::quatCast(toParentDir);
+        math::Vec3 worldPos = math::Vec3(toParentDir * math::Vec4(0,0,0,1));
+        float length = 1.0f * _skeleton.getGBL() * bone._length * scaleUpVal;
+
+        Cube box(math::Vec3(0.5,0.5,length), math::Vec3(0.0f), color);
+        // Cube box(math::Vec3(length), math::Vec3(0.0f), color);
+        box._translate = math::translate(math::Mat4(1.0f), math::mix(worldPos, parentPos, 0.5));
+        box._rot = WorldRot; 
+        box.initialize();
+        box.update();
+        box.draw();
     }
 }
-
-Character::~Character()
-{
-    std::cerr << "Character delete call :" << std::endl;
-    if (_eyeIK != nullptr)
-        delete _eyeIK;
-    if (_RfootIK != nullptr)
-        delete _RfootIK;
-    if (_LfootIK != nullptr)
-        delete _LfootIK;
-};
-
 
 

@@ -9,16 +9,14 @@
 #include "Controller.h"
 #include "Body/BodyFactory.h"
 #include "Body/Ground.h"
-#include "Physx.h"
-#include "Body/CollisionCube.h"
-#include "Scene.h"
+
 struct AnimationData;
 class TimeNode;
 class Character;
 class Cube;
 enum class KeyInput;
 class Controller;
-class CollisionCube;
+
 class Simulator : Noncopyable
 {
     private:
@@ -26,7 +24,7 @@ class Simulator : Noncopyable
         std::chrono::steady_clock::time_point _prevTime;
         Controller _controller;
         BodyFactory _factory;
-        Physx _physx;
+
     public:
         Simulator(){}
         ~Simulator();
@@ -40,7 +38,6 @@ class Simulator : Noncopyable
     public : 
         Skeleton               _skeleton;
         std::vector<Animation> _animations;
-        CollisionCube*          _cube = nullptr;
         Ground                 _ground;
-        Scene                  _scene;
+
 };

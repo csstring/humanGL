@@ -37,7 +37,7 @@ math::Mat4 Controller::getMatrixInCharLocal(uint32 boneindex,const Skeleton& _sk
     const Bone* bone = &boneVector[boneindex];
     while (true)
     {
-        math::Mat4 trans = math::translate(math::Mat4(1.0f), _boneLocalVector[bone->_boneIndex].translationInBoneLocal);
+        math::Mat4 trans = math::translate(math::Mat4(1.0f), _boneLocalVector[bone->_boneIndex].translationInBoneLocal * scaleUpVal);
         math::Quat rot = _boneLocalVector[bone->_boneIndex].rotationInBoneLocal;
         matrix = trans * math::toMat4(rot) * matrix;
         if (bone->_parentBoneIndex == -1)
