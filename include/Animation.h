@@ -2,7 +2,6 @@
 #include "Common.h"
 #include <utility>
 #include <vector>
-#include "GLM/ext.hpp"
 
 class AnimationTreeTraversal;
 

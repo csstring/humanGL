@@ -10,10 +10,9 @@ PxFilterFlags MyCustomFilterShader(PxFilterObjectAttributes attributes0,
                                    const void* constantBlock,
                                    PxU32 constantBlockSize)
 {
-    // Enable resolved collision and trigger the contact callback
     pairFlags = PxPairFlag::eCONTACT_DEFAULT | PxPairFlag::eNOTIFY_TOUCH_FOUND;
 
-    return PxFilterFlag::eDEFAULT; // Or you can return other filter flags depending on your needs
+    return PxFilterFlag::eDEFAULT;
 }
 
 void Physx::Initialize(void) 
@@ -38,3 +37,12 @@ bool Physx::sweepTestUseSphere(float maxDistance, float radius, math::Vec3 initP
     physx::PxSphereGeometry sphere(radius);
     return (gScene->sweep(sphere, initialPose, sweepDirection, maxDistance, hit));
 }
+
+Physx::~Physx()
+{
+    gScene->release();
+    gPhysics->release();
+    gFoundation->release();
+    if (_contactCallback != nullptr)
+        delete _contactCallback;
+};

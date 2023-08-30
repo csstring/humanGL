@@ -1,6 +1,6 @@
 #pragma once
-#include "../Common.h"
-#include "../EnumHeader.h"
+#include "Common.h"
+#include "EnumHeader.h"
 class Bone;
 class Controller;
 class BoneLocal;

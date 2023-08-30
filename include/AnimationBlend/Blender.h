@@ -12,7 +12,12 @@ class Blender
         std::vector<IBlendNode*> _blendTree;
     public:
         Blender(){};
-        ~Blender(){};
+        ~Blender()
+        {
+            for (auto it : _blendTree)
+                delete it;
+            std::cerr << "blender delete call " << std::endl;
+        };
         void initialize(void);
         IBlendNode* getBlendNode(BlendNode nodeNum);
         void animationUpdate(

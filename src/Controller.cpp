@@ -56,12 +56,12 @@ const Animation* Controller::findAnimation(const std::string& name, const std::v
     }
     return NULL;
 }
-//Nodenum 인자 받는걸로 변경
+
 void Controller::pushAnimation(const std::string& name, const std::vector<Animation>& _animations, BlendNode nodeNum)
 {
     const Animation* pushAnimation = findAnimation(name, _animations);
     auto& animationDeque = _player->_blender.getBlendNode(nodeNum)->_animations;
-    //lower base animation time y error
+
     if (animationDeque.size() >= 3)
         animationDeque.pop_back();
     if (animationDeque.size() >= 1 &&
@@ -125,8 +125,4 @@ void Controller::controllPlayer(KeyInput key, const std::vector<Animation>& _ani
         this->pushAnimation("golf", _animations, BlendNode::UPPER);
         this->pushAnimation("golf", _animations, BlendNode::LOWER);
     }
-    else if (key == KeyInput::RFOOTIK)
-        _player->setTestLegIK(true);
-    else if (key == KeyInput::LFOOTIK)
-        _player->setTestLegIK(false);
 }

@@ -1,8 +1,8 @@
 #pragma once
-#include "../Common.h"
-#include "../BoneLocal.h"
+#include "Common.h"
+#include "BoneLocal.h"
 #include "IKInterface.h"
-#include "../EnumHeader.h"
+#include "EnumHeader.h"
 
 class Physx;
 enum class stairDir

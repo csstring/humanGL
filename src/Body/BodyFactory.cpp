@@ -10,7 +10,6 @@ Character* BodyFactory::makeCharacter(const Skeleton& _skeleton, const Controlle
     return player;
 }
 
-///////body, collision, physx 인터페이스로 통합될거 같은데
 CollisionCylinder* BodyFactory::makeCollisionCylinder(
     physx::PxScene* gScene, 
     physx::PxPhysics* gPhysics, 

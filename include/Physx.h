@@ -13,12 +13,7 @@ class Physx : Noncopyable
 
     public:
         Physx(){};
-        ~Physx()
-        {
-            gScene->release();
-            gPhysics->release();
-            gFoundation->release();
-        };
+        ~Physx();
         void Initialize(void);
         bool sweepTestUseSphere(float maxDistance,float radius, math::Vec3 initPose, math::Vec3 direction, physx::PxSweepBuffer &hit);
 };

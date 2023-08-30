@@ -27,7 +27,7 @@ void BaseNode::update(
     float interpolVal;
     std::chrono::milliseconds  millisecondFromBegin;
 
-    if (_animations.empty() == false)//first interval =1;
+    if (_animations.empty() == false)
     {
         animation = _animations.begin()->first;
         changeUpperState(upperState, animation->_name);
@@ -39,7 +39,7 @@ void BaseNode::update(
     {
         animation = _animations[1].first;
         changeUpperState(upperState, animation->_name);
-        changeLowerState(lowerState, animation->_name);//fixme
+        changeLowerState(lowerState, animation->_name);
         millisecondFromBegin = std::chrono::duration_cast<std::chrono::milliseconds>(curTime - _animations[1].second._startTime);
         interpolVal = static_cast<float>(millisecondFromBegin.count()) / OVERLAPTIME;
 

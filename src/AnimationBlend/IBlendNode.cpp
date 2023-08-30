@@ -65,10 +65,8 @@ void IBlendNode::updateTransForm(
         math::Vec3 mixT;
         getTransFormByKeyFrame(mixR, mixT, curData, keyFrame);
         
-        // if (nodeNum != BlendNode::UPPER || curData->_boneIndex != BONEID::ROOT)
-            _boneLocalVector[curData->_boneIndex].translationInBoneLocal = math::mix(_boneLocalVector[curData->_boneIndex].translationInBoneLocal, mixT, interpolVal);
-        // if (nodeNum != BlendNode::LOWER || curData->_boneIndex != BONEID::ROOT)
-            _boneLocalVector[curData->_boneIndex].rotationInBoneLocal = math::slerp(_boneLocalVector[curData->_boneIndex].rotationInBoneLocal, mixR, interpolVal);
+        _boneLocalVector[curData->_boneIndex].translationInBoneLocal = math::mix(_boneLocalVector[curData->_boneIndex].translationInBoneLocal, mixT, interpolVal);
+        _boneLocalVector[curData->_boneIndex].rotationInBoneLocal = math::slerp(_boneLocalVector[curData->_boneIndex].rotationInBoneLocal, mixR, interpolVal);
     }
 }
 

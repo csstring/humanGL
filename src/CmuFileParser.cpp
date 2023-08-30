@@ -2,7 +2,6 @@
 #include "Skeleton.h"
 #include "Animation.h"
 #include "Bone.h"
-#include "GLM/gtx/transform.hpp"
 #include "EnumHeader.h"
 #include "fstream"
 #include "math/Math.h"

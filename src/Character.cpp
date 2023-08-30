@@ -14,26 +14,6 @@
 #include "Body/CollisionCylinder.h"
 #include "math/Math.h"
 
-void Character::setTestLegIK(bool _isRight)
-{
-    math::Vec3 t, pos;
-    if (_isRight == true)
-    {
-        t = _worldTrans * _worldRotation * _controller.getMatrixInCharLocal(BONEID::RFOOT, _skeleton, _boneLocalVector) * math::Vec4(0,0,0,1);
-        pos = math::Vec3(t.x + 3, t.y +4, 1);
-    }
-    if (_isRight == false)
-    {
-        t = _worldTrans * _worldRotation * _controller.getMatrixInCharLocal(BONEID::LFOOT, _skeleton, _boneLocalVector) * math::Vec4(0,0,0,1);
-        pos = math::Vec3(t.x + 3, t.y +4, -1);
-    }
-
-    if (_RfootIK->_targetOn == false && _RfootIK->_blendingRatio == 0)
-    {
-        _RfootIK->setTestOption(pos, math::Vec3(0,1,0), _worldTrans*_worldRotation);
-        std::cout << "test call" << std::endl;
-    }
-}
 
 void Character::rotationY(float radian)
 {
@@ -155,6 +135,16 @@ void Character::draw(void)
     }
 }
 
+Character::~Character()
+{
+    std::cerr << "Character delete call :" << std::endl;
+    if (_eyeIK != nullptr)
+        delete _eyeIK;
+    if (_RfootIK != nullptr)
+        delete _RfootIK;
+    if (_LfootIK != nullptr)
+        delete _LfootIK;
+};
 
 
 

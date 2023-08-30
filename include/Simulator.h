@@ -22,14 +22,14 @@ class CollisionCube;
 class Simulator : Noncopyable
 {
     private:
-        std::vector<Character*> _players;//shared ptr써야할거 같은데
+        std::vector<Character*> _players;
         std::chrono::steady_clock::time_point _prevTime;
         Controller _controller;
         BodyFactory _factory;
         Physx _physx;
     public:
         Simulator(){}
-        ~Simulator(){}
+        ~Simulator();
         
         void initialize(void);
         void changeAnimation(KeyInput key);
@@ -40,9 +40,7 @@ class Simulator : Noncopyable
     public : 
         Skeleton               _skeleton;
         std::vector<Animation> _animations;
-        CollisionCube*          _cube;
+        CollisionCube*          _cube = nullptr;
         Ground                 _ground;
         Scene                  _scene;
 };
-
-// std::ostream& operator<<(std::ostream& os, const std::pair<Animation*, TimeNode>& ref);

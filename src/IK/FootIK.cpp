@@ -73,10 +73,6 @@ bool FootIK::findTargetObject(
 
     if (hitFlag == false || abs(5 - hit.block.distance) >= 5)
     {
-        // if (hitFlag == false)
-        //     // std::cout << "hit fail" << std::endl;
-        // else
-            // std::cout << "distance fail : " << glm::abs(5-hit.block.distance) << std::endl;
         return false;
     }
     
@@ -92,7 +88,6 @@ bool FootIK::findTargetObject(
     else
         tmpDir = stairDir::NORMAL;
 
-    //reach fail
     if (reachable(inCharLocalPos,disVector ,math::Vec3(math::inverse(charLocalToWorld) * math::Vec4(worldTarget,1))) == false && tmpDir != stairDir::DOWNSTAIR)
         return false;
 
@@ -200,7 +195,6 @@ void FootIK::fixBendingAngle(math::Vec3& start, math::Vec3& mid, math::Vec3& end
 
     if (math::axis(bendRot).x > 0)
     {
-        // std::cout << "bend fix check" << std::endl;
         return;
     }
 }
@@ -235,7 +229,6 @@ bool FootIK::saveBlendingAnimation(std::vector<math::Vec3>& inCharLocalPos, std:
         iterCount++;
         if (iterCount >= 30)
         {
-            // std::cout << "Fook ik length val : " << glm::length(footPosInChar - inCharLocalPos[2]) << std::endl;
             return false;
         }
             
@@ -249,7 +242,6 @@ bool FootIK::saveBlendingAnimation(std::vector<math::Vec3>& inCharLocalPos, std:
             if (i-1 == 1)
                 fixBendingAngle(start, inCharLocalPos[1], footPosInChar);
             BoneDir = inCharLocalPos[i+1] - inCharLocalPos[i];
-            // positionFixLimitAngleBackWard(inCharLocalPos[i-1], inCharLocalPos[i], BoneDir ,_boneVector[_boneIndexVec[i+1]]);
         }
 
         inCharLocalPos.front() = start;
@@ -311,7 +303,7 @@ void FootIK::solveIK(
         _isFirst = false;
         _prevTime = _curTime;
     }
-    //save velocity
+
     {
         math::Vec3 beforePos = math::Vec3(charLocalToWorld * math::Vec4(0,0,0,1));
         math::Mat4 curRootTrans = controller.getMatrixInCharLocal(BONEID::ROOT, controller.getPlayer()->getCharacterSkeleton(), _boneLocalVector);
@@ -365,26 +357,6 @@ void FootIK::solveIK(
     _firstHitHight = getFirstHitHight(charLocalToWorld, inCharLocalPos[3], physx);
     bool saveAnimation = saveBlendingAnimation(inCharLocalPos, inCharLocalRot, inCharLocalPos[3]);
 
-    //debug
-    if (saveAnimation == false)
-    {
-        // std::cout <<"save fail" << std::endl;
-        // std::cout << _bonePos[0].y << std::endl;
-        // std::cout << "_stairDir " << (uint32)_stairDir << std::endl;
-        // std::cout << "target pos" << glm::to_string(_targetPosition) << std::endl;
-        // std::cout <<"is root animation " << _isRootAnimationOn << std::endl;
-        // std::cout <<"rootRatio " << _rootRatio << std::endl;
-        // std::cout <<"_blendingRatio" << _blendingRatio << std::endl;
-        // std::cout <<"_isMoveAnimation" << _isMoveAnimation << std::endl;
-        // std::cout <<"_targetOn " << _targetOn << std::endl;
-    } else {
-        // std::cout << "foot pos" << glm::to_string(charLocalToWorld * math::Vec4(inCharLocalPos[2],1)) << std::endl;
-        // std::cout << "tibia pos" << glm::to_string(charLocalToWorld * math::Vec4(inCharLocalPos[3],1)) << std::endl;
-        // std::cout << "target pos" << glm::to_string(charLocalToWorld * math::Vec4(_targetPosition,1)) << std::endl;
-        // std::cout <<"_targetOn " << _targetOn << std::endl;
-        // std::cout <<"_blendingRatio" << _blendingRatio << std::endl;
-    }
-
     _prevTibiaPos = inCharLocalPos[3];
     if (_isRootAnimationOn == true || (_stairDir == stairDir::DOWNSTAIR && _rootRatio > 0))
     {
@@ -399,8 +371,6 @@ void FootIK::solveIK(
     {
         for (int i=3; i >=1; --i)
         {
-            // std::cout << std::to_string(_boneIndexVec[i]) << " : " << glm::to_string(_bonePos[i]) << std::endl;
-            // std::cout <<std::to_string(_boneIndexVec[i]) << " : " << glm::to_string(_boneLocalVector[_boneIndexVec[i]].translationInBoneLocal) << std::endl;
             _boneLocalVector[_boneIndexVec[i]].translationInBoneLocal = _bonePos[i];
             _boneLocalVector[_boneIndexVec[i]].rotationInBoneLocal = _boneRot[i];
         }

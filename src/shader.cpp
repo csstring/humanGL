@@ -10,12 +10,11 @@
 
 Shader::Shader(const char* vertexRelativePath,const char* fragmentRelativePath)
 {
-	_vertexFullPath.assign(getcwd(NULL,0));
-	_vertexFullPath.append(vertexRelativePath);
-	_fragmentFullPath.assign(getcwd(NULL,0));
-	_fragmentFullPath.append(fragmentRelativePath);
-	std::cout << _vertexFullPath << std::endl;
-	std::cout << _fragmentFullPath << std::endl;
+	std::filesystem::path vertexPath(vertexRelativePath);
+  std::filesystem::path fragmentPath(fragmentRelativePath);
+
+	_vertexFullPath.assign(std::filesystem::canonical(vertexPath));
+	_fragmentFullPath.assign(std::filesystem::canonical(fragmentPath));
 }
 
 void Shader::initialize() 
@@ -65,7 +64,9 @@ void Shader::initialize()
 	{
 		std::vector<char> VertexShaderErrorMessage(InfoLogLength + 1);
 		glGetShaderInfoLog(VertexShaderID, InfoLogLength, NULL, &VertexShaderErrorMessage[0]);
-		printf("%s\n", &VertexShaderErrorMessage[0]);
+		std::string ErrorMessage(VertexShaderErrorMessage.begin(), VertexShaderErrorMessage.end());
+		
+		std::cout << ErrorMessage << std::endl;
 	}
 
 	// Compile Fragment Shader
@@ -116,17 +117,22 @@ void Shader::use(void)
 	glUseProgram(_programId);
 }
 
-void Shader::setMat4(const std::string &name, glm::mat4 mat4) const
-{
-    glUniformMatrix4fv(glGetUniformLocation(_programId, name.c_str()),1, false, &mat4[0].x);
-}
-
 void Shader::setMat4(const std::string &name, math::Mat4 mat4) const
 {
     glUniformMatrix4fv(glGetUniformLocation(_programId, name.c_str()),1, false, &mat4[0].x);
 }
 
+void Shader::setVec3(const std::string &name, math::Vec3 vec3) const
+{
+    glUniform3fv(glGetUniformLocation(_programId, name.c_str()), 1, &vec3.x);
+}
+
 void Shader::setUint(const std::string &name, unsigned int index) const
 {
     glUniform1ui(glGetUniformLocation(_programId, name.c_str()), index);
+}
+
+void Shader::setFloat(const std::string &name, float index) const
+{
+    glUniform1f(glGetUniformLocation(_programId, name.c_str()), index);
 }

@@ -12,8 +12,6 @@ void Scene::update(void)
     for(CollisionCube& cube: _objects)
     {
         auto pos = cube.gCubeActor->getGlobalPose();
-        // std::cout << ft_to_string(pos.p) << std::endl;
-        // std::cout << "angle " << pos.q.getAngle() <<std::endl;
         cube.update();
     }
 }

@@ -2,7 +2,6 @@
 #include "Common.h"
 #include <string>
 #include <vector>
-#include "GLM/ext.hpp"
 #include <tuple>
 
 enum class DOF;

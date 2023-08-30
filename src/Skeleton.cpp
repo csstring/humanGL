@@ -1,10 +1,6 @@
 #include "Skeleton.h"
 #include "math/Math.h"
-/*
-math::Quat localRot = bone._c * math::Quat_cast(matrix) * bone._invC;
-animationData->_localRotation.push_back({animationTime, localRot});
-math::Vec3 transV = glm::toMat3(localRot) * bone._b + localTransV;
-*/
+
 int32 Skeleton::findBoneIndex(const std::string& name) const
 {
     for (int i =0; i < _boneVector.size(); ++i)

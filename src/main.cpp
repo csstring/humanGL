@@ -1,4 +1,4 @@
-#include "GLM/glm.hpp"
+#define GL_SILENCE_DEPRECATION
 #include "GLFW/glfw3.h"
 #include "Window.h"
 #include "shader.h"
@@ -78,62 +78,17 @@ void fileLoad(Simulator& simulator)
         amcParser.loadAMCFile();
     }
 }
-using namespace std;
-void memoryLayoutCheck(glm::mat4& glmM, math::Mat4& mathM)
+
+void leakCheck()
 {
-    unsigned char *ptrGlm = (unsigned char *)(&glmM[0].x);
-    unsigned char *ptrMath = (unsigned char *)(&mathM[0].x);
-    cout << "============ GLM =============" << endl; 
-    for (int i =0; i <4; ++i)
-    {
-        for (int j =0; j < 4; ++j)
-        {
-            float* originPtr = (float*)ptrGlm;
-            float val = *originPtr;
-            cout << val << " ";
-            ptrGlm += 4;
-        }
-        cout << endl;
-    }
-    for (int i =0; i <4; ++i)
-    {
-        for (int j =0; j < 4; ++j)
-        {
-            float val = glmM[i][j];
-            cout << val << " ";
-        }
-        cout << endl;
-    }
-    cout << "=========================" << endl;
-    cout << "============ Math =============" << endl; 
-    for (int i =0; i <4; ++i)
-    {
-        for (int j =0; j < 4; ++j)
-        {
-            float* originPtr = (float*)ptrMath;
-            float val = *originPtr;
-            cout << val << " ";
-            ptrMath += 4;
-        }
-        cout << endl;
-    }
-    for (int i =0; i <4; ++i)
-    {
-        for (int j =0; j < 4; ++j)
-        {
-            float val = mathM[i][j];
-            cout << val << " ";
-        }
-        cout << endl;
-    }
-    cout << "=========================" << endl; 
+    system("leaks humanGL");
 }
 
 int main() 
 {
+    atexit(leakCheck);
     Window window;
-    std::cout << getcwd(NULL,0) << std::endl;
-    Shader shader("/shaderSource/VertexShader.glsl","/shaderSource/FragmentShader.glsl");
+    Shader shader("./shaderSource/VertexShader.glsl","./shaderSource/FragmentShader.glsl");
     
     window.initialize();
     _camera.initialize();

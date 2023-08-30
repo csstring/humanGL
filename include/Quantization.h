@@ -1,6 +1,5 @@
 #pragma once
 #include "Common.h"
-#include "GLM/ext.hpp"
 
 struct quatPressData
 {

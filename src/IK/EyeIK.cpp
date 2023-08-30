@@ -1,6 +1,4 @@
 #include "IK/EyeIK.h"
-#include "GLM/gtx/quaternion.hpp"
-#include "GLM/gtc/quaternion.hpp"
 #include "EnumHeader.h"
 #include "Controller.h"
 #include "Character.h"
@@ -84,8 +82,6 @@ void EyeIK::solveIK(
             continue;
         if (limitAngleCheck(_boneVector[i], rot) == false)
         {
-            // math::Vec3 deg = quatToEulerDivideRatio(rot, 1) * (180.0f / PI);
-            // std::cout << glm::to_string(deg) << std::endl;
             _targetOn = false;
             break;
         }

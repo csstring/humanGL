@@ -111,12 +111,6 @@ void Window::processInput(Simulator& simulator, Camera& camera)
     if (glfwGetKey(_window, GLFW_KEY_I) == GLFW_PRESS)
         simulator.changeAnimation(KeyInput::CUBEDOWN);
 
-    //test ik fix me
-    if (glfwGetKey(_window, GLFW_KEY_1) == GLFW_PRESS)
-        simulator.changeAnimation(KeyInput::RFOOTIK);
-    if (glfwGetKey(_window, GLFW_KEY_2) == GLFW_PRESS)
-        simulator.changeAnimation(KeyInput::LFOOTIK);
-
     if (currentAddCharState == GLFW_PRESS && previousAddCharState == GLFW_RELEASE)
     {
         simulator.addPlayer("idle");

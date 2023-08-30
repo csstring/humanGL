@@ -9,7 +9,7 @@
 
 IBlendNode* Blender::getBlendNode(BlendNode nodeNum)
 {
-    for (const auto& node : _blendTree)
+    for (const auto node : _blendTree)
     {
         if (node->_nodeNum == nodeNum)
             return node;
@@ -41,7 +41,7 @@ void Blender::animationUpdate(
     for (const auto& node : _blendTree)
     {
         node->update(curTime, boneLocalVector, lowerState, upperState);
-        if (node->_parentIndex >= 1 && _blendTree[node->_parentIndex]->_state > node->_state)//fix me 애니메이션 블렌드 안시키고 clear시킴
+        if (node->_parentIndex >= 1 && _blendTree[node->_parentIndex]->_state > node->_state)
         {
             node->_animations.clear();
             node->_state = 0;

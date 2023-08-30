@@ -3,7 +3,6 @@ void ContactCallBack::onContact(const PxContactPairHeader& pairHeader, const PxC
 {
     PX_UNUSED((pairHeader));
     std::vector<PxContactPairPoint> contactPoints;
-    // std::cout << "contact count : " <<nbPairs << std::endl;
 
     for(PxU32 i=0;i<nbPairs;i++)
     {

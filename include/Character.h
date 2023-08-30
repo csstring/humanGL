@@ -27,9 +27,9 @@ class Character
     public:
         CollisionCylinder* _collisionMesh;
         Blender _blender;
-        EyeIK* _eyeIK;
-        FootIK* _RfootIK;
-        FootIK* _LfootIK;
+        EyeIK* _eyeIK = nullptr;
+        FootIK* _RfootIK = nullptr;
+        FootIK* _LfootIK = nullptr; 
         UpperState _upState;
         LowerState _lowerState;
         float      _yError = 0.001;
@@ -42,12 +42,8 @@ class Character
     public:
         Character(
             const Skeleton& skeleton, const Controller& controller, CollisionCylinder* collisionMesh
-        ) : _skeleton(skeleton), _eyeIK(nullptr), _controller(controller), _isFirst(true), _collisionMesh(collisionMesh){};
-        ~Character()
-        {
-            // if (_eyeIK != nullptr) fix me
-            //     delete _eyeIK;
-        };
+        ) : _skeleton(skeleton), _controller(controller), _isFirst(true), _collisionMesh(collisionMesh){};
+        ~Character();
         void initialize(void);
         const Skeleton& getCharacterSkeleton(void) const {return _skeleton;};
         void update(const std::chrono::steady_clock::time_point& curTime, math::Vec3 eyeTarget, Physx* physx);
@@ -55,5 +51,5 @@ class Character
         void rotationY(float radian);
         math::Mat4 getCharacterWorldPosition(void) const;
         const std::vector<BoneLocal>& getCharLocalVector(void) const {return _boneLocalVector;};
-        void setTestLegIK(bool _isRight);
+
 };
