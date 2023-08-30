@@ -53,7 +53,9 @@ void AMCFileParser::saveTotalFrame(void)
     std::ifstream ifs(_filePath);
 
     if (ifs.is_open() == false)
-        ft_assert("file open fail");
+    {
+        ft_exit("amc file open fail");
+    }
     while (std::getline(ifs,buffer))
     {
         if ('0' <= buffer[0] && buffer[0] <= '9')
@@ -66,7 +68,6 @@ bool AMCFileParser::loadAMCFile(void)
 {
     std::ifstream ifs;
     std::string buffer;
-    static float bugtem = 0;
     saveTotalFrame();
     std::vector<AnimationData*> boneIndexVector;
     boneDataindexing(boneIndexVector);
@@ -157,6 +158,6 @@ bool AMCFileParser::loadAMCFile(void)
     }
 
     _animation->_animationMillisecond = std::roundf((float)(animationTime * 1000) / (120.0f * _animation->_animationSpeed));
-
+    ifs.close();
     return true;
 }

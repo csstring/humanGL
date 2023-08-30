@@ -4,8 +4,6 @@
 class Skeleton;
 struct Bone;
 class Animation;
-
-static const char* asfPath = "/Users/schoe/Desktop/humanGL/asf/02.asf";
 class CmuFileParser : Noncopyable
 {
     public : 
@@ -13,7 +11,13 @@ class CmuFileParser : Noncopyable
             std::string filePath, 
             Skeleton* skeleton,
             Animation* animation
-        ) : _filePath(filePath), _skeleton(skeleton), _animation(animation){};
+        ) : _skeleton(skeleton), _animation(animation)
+        {
+            std::filesystem::path amcPath(filePath);
+            if (std::filesystem::exists(amcPath) == false)
+                ft_exit("asf file path fail");
+            _filePath = std::filesystem::canonical(amcPath);
+        };
 
         ~CmuFileParser()
         {
@@ -29,7 +33,7 @@ class CmuFileParser : Noncopyable
         bool              parserAsfDof(std::ifstream& ifs, Bone& bone);
 
     private:
-        const std::string _filePath;
+        std::string _filePath;
         Skeleton*         _skeleton;
         Animation*        _animation;
 };

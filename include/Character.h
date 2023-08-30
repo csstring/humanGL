@@ -9,6 +9,7 @@ class Skeleton;
 class Controller;
 class Ground;
 
+static float scaleUpVal = 2;
 class Character
 {   
     private:

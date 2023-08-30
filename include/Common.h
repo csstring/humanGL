@@ -11,7 +11,7 @@
 #include "math/Quat.h"
 #include "math/Vec3.h"
 #include "math/Vec4.h"
-#include <memory>
+#include <filesystem>
 
 typedef signed char         int8;
 typedef signed short        int16;
@@ -23,7 +23,7 @@ typedef unsigned int        uint32;
 typedef unsigned long       uint64;        
 
 const float OVERLAPTIME = 200;
-const float scaleUpVal = 2;
+
 class Noncopyable
 {
     public:
@@ -39,7 +39,7 @@ class Noncopyable
 
 //debug
 void ft_assert(const std::string& exec);
-
+void ft_exit(const std::string message);
 //utility
 std::vector<std::string> ft_split(const std::string& str);
 math::Mat4 ft_rotate(math::Vec3 start, math::Vec3 end);

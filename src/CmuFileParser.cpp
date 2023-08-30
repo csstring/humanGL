@@ -11,7 +11,9 @@ bool CmuFileParser::loadCmuFile(void)
     std::ifstream ifs(_filePath);
 
     if (ifs.is_open() == false) 
-        return false;
+    {
+        ft_exit("cmu file open fail");
+    }
 
     while (ifs.good())
     {

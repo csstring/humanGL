@@ -33,8 +33,9 @@ class Simulator : Noncopyable
         void changeAnimation(KeyInput key);
         void update(void);
         void draw(void);
-        void addPlayer(const std::string initAnimationName);//position, name 같은거 추가하면 될듯
-        void changeControllCharacter(void);//캐릭터 id추가하고 구분해야 할듯
+        void addPlayer(const std::string initAnimationName);
+        void changeControllCharacter(void);
+        void fileLoad(const std::string asfPath);
     public : 
         Skeleton               _skeleton;
         std::vector<Animation> _animations;

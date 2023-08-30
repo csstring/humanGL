@@ -4,9 +4,7 @@
 #include "shader.h"
 #include "Skeleton.h"
 #include "Animation.h"
-#include "CmuFileParser.h"
 #include "Simulator.h"
-#include "AMCFileParser.h"
 #include "Body/Ground.h"
 #include "Body/BodyFactory.h"
 #include "Camera.h"
@@ -50,40 +48,18 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
     _camera.ProcessMouseScroll(static_cast<float>(yoffset));
 }
 
-void fileLoad(Simulator& simulator)
-{//fixme path
-    std::vector<const char*> amcPathList = {"/Users/schoe/Desktop/humanGL/amc/walk1.amc", 
-    "/Users/schoe/Desktop/humanGL/amc/run.amc","/Users/schoe/Desktop/humanGL/amc/runJump2.amc","/Users/schoe/Desktop/humanGL/amc/punch.amc",
-    "/Users/schoe/Desktop/humanGL/amc/idle.amc", "/Users/schoe/Desktop/humanGL/amc/dance.amc", "/Users/schoe/Desktop/humanGL/amc/drink.amc", 
-    "/Users/schoe/Desktop/humanGL/amc/roll.amc", "/Users/schoe/Desktop/humanGL/amc/golf.amc"};
-    simulator._animations.push_back(Animation("walk", 1));
-    simulator._animations.push_back(Animation("run", 1));
-    simulator._animations.push_back(Animation("runJump2", 1));
-    simulator._animations.push_back(Animation("punch", 1));
-    simulator._animations.push_back(Animation("idle", 1));
-    simulator._animations.push_back(Animation("dance", 1));
-    simulator._animations.push_back(Animation("drink", 1));
-    simulator._animations.push_back(Animation("roll", 1));
-    simulator._animations.push_back(Animation("golf", 1));
-    CmuFileParser parser(asfPath,&simulator._skeleton, &simulator._animations[0]);
-    parser.loadCmuFile();
-
-    AnimationData root = simulator._animations[0]._rootNode;
-    for (int i = 0; i < simulator._animations.size(); ++i)
-    {
-        simulator._animations[i]._rootNode = root;
-        AMCFileParser amcParser(amcPathList[i], &simulator._skeleton, &simulator._animations[i]);
-        amcParser.loadAMCFile();
-    }
-}
-
 void leakCheck()
 {
     system("leaks humanGL");
 }
 
-int main() 
+int main(int ac, char **av) 
 {
+    if (ac < 2){
+        ft_exit("input error : cmu file path missing");
+    } else if (ac > 2) {
+        ft_exit("input error : to many argument");
+    }
     // atexit(leakCheck);
     Window window;
     Shader shader("./shaderSource/VertexShader.glsl","./shaderSource/FragmentShader.glsl");
@@ -94,7 +70,7 @@ int main()
 
     Simulator simulator;
     BodyFactory bodyFactory;
-    fileLoad(simulator);
+    simulator.fileLoad(av[1]);
     simulator.initialize();
     // camera mouse call
     glfwSetFramebufferSizeCallback(window._window, framebuffer_size_callback);

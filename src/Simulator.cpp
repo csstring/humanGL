@@ -5,6 +5,8 @@
 #include "Body/Cube.h"
 #include "EnumHeader.h"
 #include "math/Math.h"
+#include "CmuFileParser.h"
+#include "AMCFileParser.h"
 void Simulator::addPlayer(const std::string initAnimationName)
 {
     float radius = _skeleton.getSkeletonWidth();
@@ -115,6 +117,38 @@ void Simulator::changeAnimation(KeyInput key)
         _ground._rot = _ground._rot * math::rotate(math::radians(1.0f), math::Vec3(0,0,-1));
     else
         _controller.controllPlayer(key, _animations);
+}
+
+void Simulator::fileLoad(const std::string asfPath)
+{
+    std::vector<const char*> amcPathList = {"./amc/walk1.amc", 
+    "./amc/run.amc","./amc/runJump2.amc","./amc/punch.amc",
+    "./amc/idle.amc", "./amc/dance.amc", "./amc/drink.amc", 
+    "./amc/roll.amc", "./amc/golf.amc"};
+    _animations.push_back(Animation("walk", 1));
+    _animations.push_back(Animation("run", 1));
+    _animations.push_back(Animation("runJump2", 1));
+    _animations.push_back(Animation("punch", 1));
+    _animations.push_back(Animation("idle", 1));
+    _animations.push_back(Animation("dance", 1));
+    _animations.push_back(Animation("drink", 1));
+    _animations.push_back(Animation("roll", 1));
+    _animations.push_back(Animation("golf", 1));
+
+    std::filesystem::path asf(asfPath);
+    if (std::filesystem::exists(asf) == false)
+        ft_exit("asf file path fail");
+    
+    CmuFileParser parser(std::filesystem::canonical(asf),&_skeleton, &_animations[0]);
+    parser.loadCmuFile();
+
+    AnimationData root = _animations[0]._rootNode;
+    for (int i = 0; i < _animations.size(); ++i)
+    {
+        _animations[i]._rootNode = root;
+        AMCFileParser amcParser(amcPathList[i], &_skeleton, &_animations[i]);
+        amcParser.loadAMCFile();
+    }
 }
 
 Simulator::~Simulator()

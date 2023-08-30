@@ -47,3 +47,9 @@ math::Quat quatDivideRatio(const math::Quat& quat, float ratio)
     angle *= ratio;
     return math::angleAxis(angle, axis);
 }
+
+void ft_exit(const std::string message)
+{
+    std::cerr << message << std::endl;
+    exit(1);
+}
